@@ -155,16 +155,16 @@ public class Main {
 		que.offer(x);
 		que.offer(y);   
 		do {
-			
 			Integer[] temp = new Integer[que.size()];
 			que.toArray(temp);
-			int n;
+			int n=0;
+			/*关键1:无此则规则*/
 			do{
 				n=(int)(Math.random()*que.size());
 			}while(n%2!=0);
+			
 			x=temp[n];
 			y=temp[n+1];
-			
 			while(judge(map,x,y)) {
 				int d=(int)(Math.random()*4);
 				switch(d) {
@@ -209,9 +209,12 @@ public class Main {
 //				System.out.println();
 //				draw(map);
 			}
+			/*关键2:使用1st则走不完*/
+//			que.pop();
+//			que.pop();
+			que.remove(n);
+			que.remove(n);
 			
-			que.remove(n);
-			que.remove(n);
 //			System.out.print("queue:");
 //			for(Integer q : que){
 //	            System.out.print(q+" ");
@@ -223,19 +226,19 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		int[][][] map=new int[3][17][107];
+		int[][][] map=new int[3][25][107];
 		begin(map[0]);
 		begin(map[1]);
 		begin(map[2]);
 //		draw(map[0]);
 		
-		recursion(map[0],2,2);
-		print(map[0]);
+//		recursion(map[0],2,2);
+//		print(map[0]);
 		
-		stack(map[1],2,2);
-		print(map[1]);
+//		stack(map[1],2,2);
+//		print(map[1]);
 		
-		queue(map[2],10,2);
+		queue(map[2],2,2);
 		print(map[2]);
 		
 	}
