@@ -162,7 +162,6 @@ public class Main {
 			y=que.poll();
 			que.offer(x);
 			que.offer(y);
-			System.out.println();
 			while(judgeQ(map,x,y)) {
 				int d=(int)(Math.random()*4);
 				switch(d) {
