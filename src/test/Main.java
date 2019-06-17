@@ -1,7 +1,6 @@
 package test;
 
 import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -43,13 +42,6 @@ public class Main {
 	
 	static boolean judge(int map[][],int x,int y) {
 		if(map[x][y+2]+map[x][y+1]==1||map[x-2][y]+map[x-1][y]==1||map[x][y-2]+map[x][y-1]==1||map[x+2][y]+map[x+1][y]==1) {
-			return true;
-		}
-		return false;
-	}
-	
-	static boolean judgeQ(int map[][],int x,int y) {
-		if(map[x][y+2]==1||map[x-2][y]==1||map[x][y-2]==1||map[x+2][y]==1) {
 			return true;
 		}
 		return false;
@@ -144,36 +136,41 @@ public class Main {
 				y=st.pop();
 				st.push(y);
 				st.push(x);
-				System.out.println("push in:"+x+"+"+y);
-				System.out.print("stack:");
-				for(Integer q : st){
-		            System.out.print(q+" ");
-		        }
-				System.out.println();
-
-				draw(map);
+//				System.out.println("push in:"+x+"+"+y);
+//				System.out.print("stack:");
+//				for(Integer q : st){
+//		            System.out.print(q+" ");
+//		        }
+//				System.out.println();
+//				draw(map);
 			}
 			x=st.pop();
 			y=st.pop();
-			System.out.println("pop out:"+x+"+"+y);
+//			System.out.println("pop out:"+x+"+"+y);
 		}while(!st.empty());
 	}
 	
 	static void queue(int map[][],int x,int y) {
-		Queue<Integer> que = new LinkedList<Integer>();
+		LinkedList<Integer> que = new LinkedList<Integer>();
 		que.offer(x);
 		que.offer(y);   
 		do {
-			x=que.poll();
-			y=que.poll();
-			que.offer(x);
-			que.offer(y);
+			
+			Integer[] temp = new Integer[que.size()];
+			que.toArray(temp);
+			int n;
+			do{
+				n=(int)(Math.random()*que.size());
+			}while(n%2!=0);
+			x=temp[n];
+			y=temp[n+1];
+			
 			while(judge(map,x,y)) {
 				int d=(int)(Math.random()*4);
 				switch(d) {
 					case 0:{
 						if(map[x][y+1]+map[x][y+2]==1) {
-							map[x][y+1]=map[x][y+2]=8;
+							map[x][y]=map[x][y+1]=map[x][y+2]=8;
 							que.offer(x);
 							que.offer(y+2);
 						}
@@ -181,7 +178,7 @@ public class Main {
 					}
 					case 1:{
 						if(map[x-1][y]+map[x-2][y]==1) {
-							map[x-1][y]=map[x-2][y]=8;
+							map[x][y]=map[x-1][y]=map[x-2][y]=8;
 							que.offer(x-2);
 							que.offer(y);
 						}
@@ -189,7 +186,7 @@ public class Main {
 					}
 					case 2:{
 						if(map[x][y-1]+map[x][y-2]==1) {
-							map[x][y-1]=map[x][y-2]=8;
+							map[x][y]=map[x][y-1]=map[x][y-2]=8;
 							que.offer(x);
 							que.offer(y-2);
 						}
@@ -197,42 +194,49 @@ public class Main {
 					}
 					case 3:{
 						if(map[x+1][y]+map[x+2][y]==1) {
-							map[x+1][y]=map[x+2][y]=8;
+							map[x][y]=map[x+1][y]=map[x+2][y]=8;
 							que.offer(x+2);
 							que.offer(y);
 						}
 						break;
 					}
 				}
-				System.out.print("queue:");
-				for(Integer q : que){
-		            System.out.print(q+" ");
-		        }
-				System.out.println();
-				draw(map);
+				
+//				System.out.print("queue:");
+//				for(Integer q : que){
+//		            System.out.print(q+" ");
+//		        }
+//				System.out.println();
+//				draw(map);
 			}
-			x=que.poll();
-			y=que.poll();
-			System.out.println("poll out:"+x+"+"+y);
+			
+			que.remove(n);
+			que.remove(n);
+//			System.out.print("queue:");
+//			for(Integer q : que){
+//	            System.out.print(q+" ");
+//	        }
+//			System.out.println();
+//			draw(map);
 		}while(!que.isEmpty());
 		
 	}
 	
 	public static void main(String[] args) {
-		int[][][] map=new int[3][7][17];
+		int[][][] map=new int[3][17][107];
 		begin(map[0]);
 		begin(map[1]);
 		begin(map[2]);
 //		draw(map[0]);
 		
-//		recursion(map[0],2,2);
-//		print(map[0]);
+		recursion(map[0],2,2);
+		print(map[0]);
 		
-//		stack(map[1],2,2);
-//		print(map[1]);
+		stack(map[1],2,2);
+		print(map[1]);
 		
-//		queue(map[2],2,2);
-//		print(map[2]);
+		queue(map[2],10,2);
+		print(map[2]);
 		
 	}
 }
