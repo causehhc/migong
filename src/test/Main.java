@@ -162,10 +162,19 @@ public class Main {
 			do{
 				n=(int)(Math.random()*que.size());
 			}while(n%2!=0);
-			
 			x=temp[n];
 			y=temp[n+1];
+			
 			while(judge(map,x,y)) {
+				/*升级:更复杂（小死胡同更少）（一个点完整之前继续随机选择）*/
+				Integer[] temp2 = new Integer[que.size()];
+				que.toArray(temp2);
+				do{
+					n=(int)(Math.random()*que.size());
+				}while(n%2!=0);
+				x=temp2[n];
+				y=temp2[n+1];
+				
 				int d=(int)(Math.random()*4);
 				switch(d) {
 					case 0:{
@@ -226,7 +235,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		int[][][] map=new int[3][25][107];
+		int[][][] map=new int[3][39][127];
 		begin(map[0]);
 		begin(map[1]);
 		begin(map[2]);
@@ -240,6 +249,7 @@ public class Main {
 		
 		queue(map[2],2,2);
 		print(map[2]);
+//		draw(map[2]);
 		
 	}
 }
