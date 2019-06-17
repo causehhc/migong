@@ -6,7 +6,38 @@ import java.util.Stack;
 
 public class Main {
 	
-	static void begin(int map[][]) {
+	public static void main(String[] args) {
+		CreatMap[] map= {new CreatMap(),new CreatMap(),new CreatMap()};
+		for(int i=0;i<3;i++) {
+			map[i].setMap(17, 67);
+		}
+		map[0].recur();
+		map[1].stack();
+		map[2].queue();
+		for(int i=0;i<3;i++) {
+			map[i].print();
+		}
+	}
+}
+
+class CreatMap {
+	private int x=-1;
+	private int y=-1;
+	private int[][] map;
+	
+	CreatMap(){
+		
+	}
+	
+	void setMap(int x,int y) {
+		map =new int[x][y];
+		while(true) {
+			this.x=(int)(Math.random()*(x-4))+2;
+			this.y=(int)(Math.random()*(y-4))+2;
+			if(this.x%2==0&&this.y%2==0) {
+				break;
+			}
+		}
 		for(int i=2;i<map.length-1;i+=2) {
 			for(int j=2;j<map[i].length-1;j+=2) {
 				map[i][j]=1;
@@ -14,7 +45,7 @@ public class Main {
 		}
 	}
 	
-	static void print(int map[][]) {
+	void print() {
 		for(int i=1;i<map.length-1;i++) {
 			for(int j=1;j<map[i].length-1;j++) {
 				if(map[i][j]==0) {
@@ -29,7 +60,7 @@ public class Main {
 		System.out.println();
 	}
 	
-	static void draw(int map[][]) {
+	void draw() {
 		Scanner in = new Scanner(System.in);
 		for(int i=0;i<map.length;i++) {
 			for(int j=0;j<map[i].length;j++) {
@@ -40,44 +71,44 @@ public class Main {
 		in.nextLine();
 	}
 	
-	static boolean judge(int map[][],int x,int y) {
+	private boolean judge(int x,int y) {
 		if(map[x][y+2]+map[x][y+1]==1||map[x-2][y]+map[x-1][y]==1||map[x][y-2]+map[x][y-1]==1||map[x+2][y]+map[x+1][y]==1) {
 			return true;
 		}
 		return false;
 	}
 	
-	static boolean recursion(int map[][],int x,int y) {
+	boolean recursion(int x,int y) {
 //		System.out.println("push in:"+x+"+"+y);
 //		draw(map);
-		while(judge(map,x,y)) {
+		while(judge(x,y)) {
 			int d=(int)(Math.random()*4);
 			switch(d) {
 				case 0:{
 					if(map[x][y+1]+map[x][y+2]==1) {
 						map[x][y+1]=map[x][y+2]=8;
-						recursion(map,x,y+2);
+						recursion(x,y+2);
 					}
 					break;
 				}
 				case 1:{
 					if(map[x-1][y]+map[x-2][y]==1) {
 						map[x-1][y]=map[x-2][y]=8;
-						recursion(map,x-2,y);
+						recursion(x-2,y);
 					}
 					break;
 				}
 				case 2:{
 					if(map[x][y-1]+map[x][y-2]==1) {
 						map[x][y-1]=map[x][y-2]=8;
-						recursion(map,x,y-2);
+						recursion(x,y-2);
 					}
 					break;
 				}
 				case 3:{
 					if(map[x+1][y]+map[x+2][y]==1) {
 						map[x+1][y]=map[x+2][y]=8;
-						recursion(map,x+2,y);
+						recursion(x+2,y);
 					}
 					break;
 				}
@@ -87,7 +118,11 @@ public class Main {
 		return false;
 	}
 	
-	static void stack(int map[][],int x,int y) {
+	void recur() {
+		recursion(x,y);
+	}
+	
+	void stack() {
 		Stack<Integer> st=new Stack<Integer>(); 
 		st.push(y);
 		st.push(x);
@@ -96,7 +131,7 @@ public class Main {
 			y=st.pop();
 			st.push(y);
 			st.push(x);
-			while(judge(map,x,y)) {
+			while(judge(x,y)) {
 				int d=(int)(Math.random()*4);
 				switch(d) {
 					case 0:{
@@ -136,21 +171,25 @@ public class Main {
 				y=st.pop();
 				st.push(y);
 				st.push(x);
+				
 //				System.out.println("push in:"+x+"+"+y);
 //				System.out.print("stack:");
 //				for(Integer q : st){
 //		            System.out.print(q+" ");
 //		        }
 //				System.out.println();
-//				draw(map);
+//				draw();
+				
 			}
 			x=st.pop();
 			y=st.pop();
+			
 //			System.out.println("pop out:"+x+"+"+y);
+			
 		}while(!st.empty());
 	}
 	
-	static void queue(int map[][],int x,int y) {
+	void queue() {
 		LinkedList<Integer> que = new LinkedList<Integer>();
 		que.offer(x);
 		que.offer(y);   
@@ -165,7 +204,7 @@ public class Main {
 			x=temp[n];
 			y=temp[n+1];
 			
-			while(judge(map,x,y)) {
+			while(judge(x,y)) {
 				/*升级:更复杂（小死胡同更少）（一个点完整之前继续随机选择）*/
 				Integer[] temp2 = new Integer[que.size()];
 				que.toArray(temp2);
@@ -216,7 +255,7 @@ public class Main {
 //		            System.out.print(q+" ");
 //		        }
 //				System.out.println();
-//				draw(map);
+//				draw();
 			}
 			/*关键2:使用1st则走不完*/
 //			que.pop();
@@ -234,22 +273,7 @@ public class Main {
 		
 	}
 	
-	public static void main(String[] args) {
-		int[][][] map=new int[3][39][127];
-		begin(map[0]);
-		begin(map[1]);
-		begin(map[2]);
-//		draw(map[0]);
-		
-//		recursion(map[0],2,2);
-//		print(map[0]);
-		
-//		stack(map[1],2,2);
-//		print(map[1]);
-		
-		queue(map[2],2,2);
-		print(map[2]);
-//		draw(map[2]);
-		
+	void goMap(int bx,int by,int ex,int ey) {
+		//TODO
 	}
 }
