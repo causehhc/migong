@@ -31,16 +31,32 @@ public class CreatMap {
 	
 	void print() {
 		Scanner in = new Scanner(System.in);
-		for(int i=1;i<map.length-1;i++) {
+		for(int i=0;i<map.length-1;i++) {
+			System.out.printf("%2d",i);
 			for(int j=1;j<map[i].length-1;j++) {
-				if(map[i][j]==0) {
-					System.out.print("\u001b[40m0\u001b[0m");
-				}
-				else if(map[i][j]==8){
-					System.out.print("\u001b[37m8\u001b[0m");
+				if(i==0) {
+					if(j>9) {
+						if(j%10==0) {
+							System.out.print("\u001b[1;31m0\u001b[0m");
+						}
+						else{
+							System.out.print(j%10);
+						}
+					}
+					else{
+						System.out.print(j);
+					}
 				}
 				else {
-					System.out.print("\u001b[1;31m1\u001b[0m");
+					if(map[i][j]==0) {
+						System.out.print("\u001b[40m0\u001b[0m");
+					}
+					else if(map[i][j]==8){
+						System.out.print("\u001b[37m8\u001b[0m");
+					}
+					else {
+						System.out.print("\u001b[1;31m1\u001b[0m");
+					}
 				}
 			}
 			System.out.println();
@@ -64,6 +80,16 @@ public class CreatMap {
 				}
 				else
 					System.out.print(map[i][j]);
+			}
+			System.out.println();
+		}
+		in.nextLine();
+	}
+	void draw() {
+		Scanner in = new Scanner(System.in);
+		for(int i=0;i<map.length;i++) {
+			for(int j=0;j<map[i].length;j++) {
+				System.out.print(map[i][j]);
 			}
 			System.out.println();
 		}

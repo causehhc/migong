@@ -17,11 +17,22 @@ public class GoMap extends CreatMap{
 		this.ey=ey;
 		map[this.ex][this.ey]=3;
 	}
-	
+	private int count() {
+		int n=0;
+		for(int i=0;i<map.length;i++) {
+			for(int j=0;j<map[0].length;j++) {
+				if(map[i][j]==1) {
+					n++;
+				}
+			}
+		}
+		return n;
+	}
 	private boolean pathMapMethod(int x,int y) {
 //		System.out.println(x+" "+y);
 //		this.draw(x,y);
 		if(x==ex&&y==ey) {
+			System.out.println("ÏÂÍ¼Â·¾¶Êý:"+this.count());
 			this.print();
 		}
 		if(map[x][y]==8) {
@@ -39,8 +50,7 @@ public class GoMap extends CreatMap{
 		return true;
 	}
 	
-	void pathmap() {
+	void runMap() {
 		pathMapMethod(bx,by);
-//		this.print();
 	}
 }
