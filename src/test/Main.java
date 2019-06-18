@@ -7,7 +7,6 @@ public class Main {
 		map.setMap(17, 67);
 		map.stack();
 		map.setPoint(2, 2, 14, 64);
-//		map.draw();
 		map.pathmap();
 	}
 }

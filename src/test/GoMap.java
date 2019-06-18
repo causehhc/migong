@@ -19,8 +19,11 @@ public class GoMap extends CreatMap{
 	}
 	
 	private boolean pathMapMethod(int x,int y) {
-		System.out.println(x+" "+y);
-		this.draw(x,y);
+//		System.out.println(x+" "+y);
+//		this.draw(x,y);
+		if(x==ex&&y==ey) {
+			this.print();
+		}
 		if(map[x][y]==8) {
 			map[x][y]=1;
 			if(pathMapMethod(x,y+1)) {
@@ -30,6 +33,7 @@ public class GoMap extends CreatMap{
 					}
 				}
 			}
+			map[x][y]=8;
 		}
 		
 		return true;
