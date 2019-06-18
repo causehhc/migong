@@ -29,6 +29,10 @@ public class CreatMap {
 		}
 	}
 	
+	int[][] trans(){
+		return map;
+	}
+	
 	void print() {
 		Scanner in = new Scanner(System.in);
 		for(int i=0;i<map.length-1;i++) {
@@ -53,6 +57,9 @@ public class CreatMap {
 					}
 					else if(map[i][j]==8){
 						System.out.print("\u001b[37m8\u001b[0m");
+					}
+					else if(map[i][j]==3){
+						System.out.print("\u001b[31m3\u001b[0m");
 					}
 					else {
 						System.out.print("\u001b[1;31m1\u001b[0m");
