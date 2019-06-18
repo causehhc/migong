@@ -39,8 +39,8 @@ public class GoMap extends CreatMap{
 		if(x==ex&&y==ey) {
 			keyb=1;
 			map[x][y]=1;
-			System.out.println("下图路径数:"+this.count());
-			this.print();
+//			System.out.println("下图路径数:"+this.count());
+//			this.print();
 		}
 		if(map[x][y]==8) {
 			map[x][y]=1;
@@ -51,10 +51,10 @@ public class GoMap extends CreatMap{
 					}
 				}
 			}
-			map[x][y]=3;
 			if(keyb==1) {
 				return false;
 			}
+			map[x][y]=3;
 		}
 //		this.draw(x,y);
 		return true;
@@ -85,8 +85,8 @@ public class GoMap extends CreatMap{
 					map[x][y]=1;
 					if(x==ex&&y==ey) {
 						k=1;
-						System.out.println("下图路径数:"+this.count());
-						this.print();
+//						System.out.println("下图路径数:"+this.count());
+//						this.print();
 						key=1;
 						break;
 					}
@@ -102,8 +102,8 @@ public class GoMap extends CreatMap{
 					map[x][y]=1;
 					if(x==ex&&y==ey) {
 						k=1;
-						System.out.println("下图路径数:"+this.count());
-						this.print();
+//						System.out.println("下图路径数:"+this.count());
+//						this.print();
 						key=1;
 						break;
 					}
@@ -119,8 +119,8 @@ public class GoMap extends CreatMap{
 					map[x][y]=1;
 					if(x==ex&&y==ey) {
 						k=1;
-						System.out.println("下图路径数:"+this.count());
-						this.print();
+//						System.out.println("下图路径数:"+this.count());
+//						this.print();
 						key=1;
 						break;
 					}
@@ -136,8 +136,8 @@ public class GoMap extends CreatMap{
 					map[x][y]=1;
 					if(x==ex&&y==ey) {
 						k=1;
-						System.out.println("下图路径数:"+this.count());
-						this.print();
+//						System.out.println("下图路径数:"+this.count());
+//						this.print();
 						key=1;
 						break;
 					}
