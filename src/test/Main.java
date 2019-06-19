@@ -5,12 +5,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
 import javafx.application.Application;
 
 //extends Application
 
 public class Main extends Application {
-	int i = 0, j = 0, f = 1;
+	int k = 0, f = 1;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -21,10 +22,12 @@ public class Main extends Application {
 		map.setMap(x, y);
 		map.setPoint(2, 2, x - 3, y - 3);
 
-//		map.stack();
-		map.queue();
+		map.stack();
+//		map.queue();
 		map.runStack();
 //		map.runBack();
+		Object[] aimArray = map.catchPoint().toArray().clone();
+//		System.out.println(aimArray[0]);
 
 		for (int i1 = 0; i1 < x * f; i1 += f) {
 			for (int j1 = 0; j1 < y * f; j1 += f) {
@@ -44,35 +47,23 @@ public class Main extends Application {
 		System.out.println("Calculate complete!");
 
 		Scene scene = new Scene(root, 1900, 1000, Color.WHITE);
-
 		root.setOnKeyPressed(e -> {
 
 			switch (e.getCode()) {
 			case ENTER:
-				int yy=0;
-				while(yy++<y) {
+				int n = 0;
+				while (n++ < 30) {
 					Rectangle r = new Rectangle();
-					r.setX(j * f);
-					r.setY(i * f);
+					r.setY((int) (aimArray[k++]) * f);
+					r.setX((int) (aimArray[k++]) * f);
 					r.setWidth(2 * f);
 					r.setHeight(2 * f);
-					if (map.trans()[i / f][j / f] == 0) {
-						r.setFill(Color.BLACK);
-					} else if (map.trans()[i / f][j / f] == 8) {
-						r.setFill(Color.WHITE);
-					} else if (map.trans()[i / f][j / f] == 1) {
-						r.setFill(Color.RED);
-					} else {
-						r.setFill(Color.GREY);
-					}
+					r.setFill(Color.RED);
 					root.getChildren().add(r);
-					j += f;
-					if (j >= y * f) {
-						j = 0;
-						i += f;
+					if (k == aimArray.length) {
+						System.exit(0);
 					}
 				}
-				
 				break;
 
 			default:
