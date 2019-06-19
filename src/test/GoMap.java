@@ -59,10 +59,10 @@ public class GoMap extends CreatMap {
 		}
 		if (map[x][y] == 8) {
 			map[x][y] = 1;
-			if (pathMapMethod(x, y + 1)) {
-				if (pathMapMethod(x - 1, y)) {
-					if (pathMapMethod(x, y - 1)) {
-						pathMapMethod(x + 1, y);
+			if (runBackMethod(x, y + 1)) {
+				if (runBackMethod(x - 1, y)) {
+					if (runBackMethod(x, y - 1)) {
+						runBackMethod(x + 1, y);
 					}
 				}
 			}
@@ -75,7 +75,7 @@ public class GoMap extends CreatMap {
 		return true;
 	}
 
-	int way0(Stack<Integer> st, int x, int y, int k) {
+	private int way0(Stack<Integer> st, int x, int y, int k) {
 		while (map[x][y + 1] == 8 && k == 0) {
 			k = 1;
 			st.push(y + 1);
@@ -96,7 +96,7 @@ public class GoMap extends CreatMap {
 		return k;
 	}
 
-	int way2(Stack<Integer> st, int x, int y, int k) {
+	private int way1(Stack<Integer> st, int x, int y, int k) {
 		while (map[x][y - 1] == 8 && k == 0) {
 			k = 1;
 			st.push(y - 1);
@@ -117,7 +117,7 @@ public class GoMap extends CreatMap {
 		return k;
 	}
 
-	int way1(Stack<Integer> st, int x, int y, int k) {
+	private int way2(Stack<Integer> st, int x, int y, int k) {
 		while (map[x - 1][y] == 8 && k == 0) {
 			k = 1;
 			st.push(y);
@@ -138,7 +138,7 @@ public class GoMap extends CreatMap {
 		return k;
 	}
 
-	int way3(Stack<Integer> st, int x, int y, int k) {
+	private int way3(Stack<Integer> st, int x, int y, int k) {
 		while (map[x + 1][y] == 8 && k == 0) {
 			k = 1;
 			st.push(y);
@@ -159,14 +159,56 @@ public class GoMap extends CreatMap {
 		return k;
 	}
 
-	void ways(int drect, Stack<Integer> st, int x, int y, int k) {
-
+	private int ways(int drect, Stack<Integer> st, int x, int y, int k) {//策略组
 		if (drect == 3021) {
 			k = this.way3(st, x, y, k);
 			k = this.way0(st, x, y, k);
 			k = this.way2(st, x, y, k);
 			k = this.way1(st, x, y, k);
 		}
+		if (drect == 0312) {
+			k = this.way0(st, x, y, k);
+			k = this.way3(st, x, y, k);
+			k = this.way1(st, x, y, k);
+			k = this.way2(st, x, y, k);
+		}
+		if (drect == 3201) {
+			k = this.way3(st, x, y, k);
+			k = this.way2(st, x, y, k);
+			k = this.way0(st, x, y, k);
+			k = this.way1(st, x, y, k);
+		}
+		if (drect == 2310) {
+			k = this.way2(st, x, y, k);
+			k = this.way3(st, x, y, k);
+			k = this.way1(st, x, y, k);
+			k = this.way0(st, x, y, k);
+		}
+		if (drect == 1203) {
+			k = this.way1(st, x, y, k);
+			k = this.way2(st, x, y, k);
+			k = this.way0(st, x, y, k);
+			k = this.way3(st, x, y, k);
+		}
+		if (drect == 2130) {
+			k = this.way2(st, x, y, k);
+			k = this.way1(st, x, y, k);
+			k = this.way3(st, x, y, k);
+			k = this.way0(st, x, y, k);
+		}
+		if (drect == 1023) {
+			k = this.way1(st, x, y, k);
+			k = this.way0(st, x, y, k);
+			k = this.way2(st, x, y, k);
+			k = this.way3(st, x, y, k);
+		}
+		if (drect == 0132) {
+			k = this.way0(st, x, y, k);
+			k = this.way1(st, x, y, k);
+			k = this.way3(st, x, y, k);
+			k = this.way2(st, x, y, k);
+		}
+		return k;
 	}
 
 	private void runStackMethod(int x, int y) {
@@ -180,76 +222,36 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			while (true) {
-				this.draw(x,y);
+//				this.draw(x, y);
 				int k = 0;
-				while (map[x][y + 1] == 8 && k == 0) {
-					k = 1;
-					st.push(y + 1);
-					st.push(x);
-					x = st.pop();
-					y = st.pop();
-					st.push(y);
-					st.push(x);
-					map[x][y] = 1;
-					if (x == ex && y == ey) {
-						k = 1;
-//						System.out.println("下图路径数:"+this.count());
-//						this.print();
-						keys = 1;
-						break;
-					}
+				if ((ex >= x && ey > y) || (ex > x && ey >= y)) {//策略1
+					if ((ex - x) >= (ey - y))
+						k = ways(3021, st, x, y, k);
+					else
+						k = ways(0312, st, x, y, k);
 				}
-				while (map[x - 1][y] == 8 && k == 0) {
-					k = 1;
-					st.push(y);
-					st.push(x - 1);
-					x = st.pop();
-					y = st.pop();
-					st.push(y);
-					st.push(x);
-					map[x][y] = 1;
-					if (x == ex && y == ey) {
-						k = 1;
-//						System.out.println("下图路径数:"+this.count());
-//						this.print();
-						keys = 1;
-						break;
-					}
+				if ((ex >= x && ey < y) || (ex > x && ey <= y)) {//策略2
+					if ((ex - x) >= (y - ey))
+						k = ways(3201, st, x, y, k);
+					else
+						k = ways(1210, st, x, y, k);
 				}
-				while (map[x][y - 1] == 8 && k == 0) {
-					k = 1;
-					st.push(y - 1);
-					st.push(x);
-					x = st.pop();
-					y = st.pop();
-					st.push(y);
-					st.push(x);
-					map[x][y] = 1;
-					if (x == ex && y == ey) {
-						k = 1;
-//						System.out.println("下图路径数:"+this.count());
-//						this.print();
-						keys = 1;
-						break;
-					}
+				if ((ex <= x && ey < y) || (ex < x && ey <= y)) {//策略3
+					if ((x - ex) >= (y - ey))
+						k = ways(1203, st, x, y, k);
+					else
+						k = ways(2130, st, x, y, k);
 				}
-				while (map[x + 1][y] == 8 && k == 0) {
-					k = 1;
-					st.push(y);
-					st.push(x + 1);
-					x = st.pop();
-					y = st.pop();
-					st.push(y);
-					st.push(x);
-					map[x][y] = 1;
-					if (x == ex && y == ey) {
-						k = 1;
-//						System.out.println("下图路径数:"+this.count());
-//						this.print();
-						keys = 1;
-						break;
-					}
+				if ((ex <= x && ey > y) || (ex < x && ey >= y)) {//策略4
+					if ((x - ex) >= (ey - y))
+						k = ways(1023, st, x, y, k);
+					else
+						k = ways(0123, st, x, y, k);
 				}
+				x = st.pop();
+				y = st.pop();
+				st.push(y);
+				st.push(x);
 				if (keys == 1) {
 					break;
 				}

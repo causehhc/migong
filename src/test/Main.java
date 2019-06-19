@@ -6,11 +6,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.util.Scanner;
+
 import javafx.application.Application;
 
 //extends Application
 
-public class Main extends Application {
+public class Main  {
+	/*
 	int k = 0, f = 1;
 
 	@Override
@@ -76,20 +79,22 @@ public class Main extends Application {
 		primaryStage.show();
 		root.requestFocus();
 	}
+	*/
 
 	public static void main(String[] args) {
-		launch(args);
-//		Scanner in=new Scanner(System.in);
-//		GoMap map=new GoMap();
-//		int i=17;
-//		int j=67;
-//		map.setMap(i, j);
+//		launch(args);
+		Scanner in=new Scanner(System.in);
+		GoMap map=new GoMap();
+		int i=17;
+		int j=67;
+		map.setMap(i, j);
 //		map.stack();
-////		map.recur();
-////		map.queue();
-//		
-//		map.setPoint(2, 2,i-3,j-3);
-////		map.runBack();
-//		map.runStack();
+//		map.recur();
+		map.queue();
+		
+		map.setPoint(2, 2,i-3,j-3);
+//		map.runBack();
+		map.runStack();
+		map.print();
 	}
 }
