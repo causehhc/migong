@@ -21,8 +21,8 @@ public class Main extends Application {
 		map.setMap(x, y);
 		map.setPoint(2, 2, x - 3, y - 3);
 
-		map.stack();
-//		map.queue();
+//		map.stack();
+		map.queue();
 		map.runStack();
 //		map.runBack();
 
