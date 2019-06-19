@@ -66,15 +66,18 @@ public class Main extends Application {
 		Object[] aimArray = map.queue.toArray().clone();
 		action = new Timeline(new KeyFrame(Duration.millis(1), e -> {
 			if (k >= aimArray.length) {
-				try {
-					scene.wait();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				map.count();
-				System.out.println("OK!");
-				System.exit(0);
+				k=aimArray.length-4;
+				root.setOnKeyPressed(e1 -> {
+					switch (e1.getCode()) {
+					case ENTER:
+						map.count();
+						System.out.println("OK!");
+						System.exit(0);
+						break;
+					default:
+						break;
+					}
+				});
 			}
 			int n = 0;
 			while (n++ < 1) {
