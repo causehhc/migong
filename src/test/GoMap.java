@@ -1,5 +1,6 @@
 package test;
 
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class GoMap extends CreatMap {
@@ -62,6 +63,7 @@ public class GoMap extends CreatMap {
 
 	private void runStackMethod(int x, int y) {
 		Stack<Integer> st = new Stack<Integer>();
+		LinkedList<Integer> queue = new LinkedList<Integer>();
 		st.push(y);
 		st.push(x);
 		int key = 0;// 解个数控制
