@@ -41,9 +41,20 @@ public class GoMap extends CreatMap {
 				}
 			}
 		}
-		System.out.println(" n1:" + n1 + " n3:" + n3 + " n0:" + n0 + " n8:" + n8);
-		System.out.println("路线n1-n3:" + ( n1 - n3));
-		System.out.println("路线无效性n1/(n0+n3):" + (double) n1 / (n0+n3));
+		System.out.println("n1:" + n1 + " n3:" + n3 + " n0:" + n0 + " n8:" + n8);
+		System.out.println("回溯率n3/n1:" + ((double) n3 / n1));
+	}
+
+	int count1() {
+		int n = 0;
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[0].length; j++) {
+				if (map[i][j] == 1) {
+					n++;
+				}
+			}
+		}
+		return n;
 	}
 
 	private boolean runBackMethod(int x, int y) {
@@ -53,7 +64,7 @@ public class GoMap extends CreatMap {
 		if (x == ex && y == ey) {
 			keyb = 1;
 			map[x][y] = 1;
-//			System.out.println("下图路径数:"+this.count());
+//			System.out.println("下图路径数:"+this.count1());
 //			this.print();
 		}
 		if (map[x][y] == 8) {
@@ -68,14 +79,14 @@ public class GoMap extends CreatMap {
 			if (keyb == 1) {
 				return false;
 			}
-			map[x][y] = 3;
+			map[x][y] = 3;// 3为一个解，8为多解
 		}
-//		this.draw(x,y);
 		return true;
 	}
 
 	private int way0(Stack<Integer> st, int x, int y, int k) {
 		while (map[x][y + 1] == 8 && k == 0) {
+
 			k = 1;
 			st.push(y + 1);
 			st.push(x);
@@ -85,10 +96,9 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = 1;
-//				System.out.println("下图路径数:"+this.count());
+				k = keys = 1;
+//				System.out.println("下图路径数:"+this.count1());
 //				this.print();
-				keys = 1;
 				break;
 			}
 		}
@@ -96,27 +106,6 @@ public class GoMap extends CreatMap {
 	}
 
 	private int way1(Stack<Integer> st, int x, int y, int k) {
-		while (map[x][y - 1] == 8 && k == 0) {
-			k = 1;
-			st.push(y - 1);
-			st.push(x);
-			x = st.pop();
-			y = st.pop();
-			st.push(y);
-			st.push(x);
-			map[x][y] = 1;
-			if (x == ex && y == ey) {
-				k = 1;
-//				System.out.println("下图路径数:"+this.count());
-//				this.print();
-				keys = 1;
-				break;
-			}
-		}
-		return k;
-	}
-
-	private int way2(Stack<Integer> st, int x, int y, int k) {
 		while (map[x - 1][y] == 8 && k == 0) {
 			k = 1;
 			st.push(y);
@@ -127,10 +116,29 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = 1;
-//				System.out.println("下图路径数:"+this.count());
+				k = keys = 1;
+//				System.out.println("下图路径数:"+this.count1());
 //				this.print();
-				keys = 1;
+				break;
+			}
+		}
+		return k;
+	}
+
+	private int way2(Stack<Integer> st, int x, int y, int k) {
+		while (map[x][y - 1] == 8 && k == 0) {
+			k = 1;
+			st.push(y - 1);
+			st.push(x);
+			x = st.pop();
+			y = st.pop();
+			st.push(y);
+			st.push(x);
+			map[x][y] = 1;
+			if (x == ex && y == ey) {
+				k = keys = 1;
+//				System.out.println("下图路径数:"+this.count1());
+//				this.print();
 				break;
 			}
 		}
@@ -139,6 +147,7 @@ public class GoMap extends CreatMap {
 
 	private int way3(Stack<Integer> st, int x, int y, int k) {
 		while (map[x + 1][y] == 8 && k == 0) {
+
 			k = 1;
 			st.push(y);
 			st.push(x + 1);
@@ -148,10 +157,9 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = 1;
-//				System.out.println("下图路径数:"+this.count());
+				k = keys = 1;
+//				System.out.println("下图路径数:"+this.count1());
 //				this.print();
-				keys = 1;
 				break;
 			}
 		}
@@ -236,7 +244,7 @@ public class GoMap extends CreatMap {
 					if ((ex - x) >= (y - ey))
 						k = ways(3201, st, x, y, k);
 					else
-						k = ways(1210, st, x, y, k);
+						k = ways(2310, st, x, y, k);
 
 				}
 				if ((ex <= x && ey < y) || (ex < x && ey <= y)) {// 策略3
@@ -251,7 +259,7 @@ public class GoMap extends CreatMap {
 					if ((x - ex) >= (ey - y))
 						k = ways(1023, st, x, y, k);
 					else
-						k = ways(0123, st, x, y, k);
+						k = ways(0132, st, x, y, k);
 
 				}
 				x = st.pop();
@@ -260,14 +268,16 @@ public class GoMap extends CreatMap {
 				st.push(x);
 				queue.offer(x);
 				queue.offer(y);
+
 //				System.out.print(queue.toString());
 //				System.out.println();
 //				this.draw();
+
 				if (keys == 1) {
 					break;
 				}
 				if (k == 0 || (x == ex && y == ey)) {
-					map[x][y] = 3;
+					map[x][y] = 3;// 3为一个解，8为多解
 					queue.pollLast();
 					queue.pollLast();
 					st.pop();
@@ -396,11 +406,45 @@ public class GoMap extends CreatMap {
 	void runStack() {
 		runStackMethod(bx, by);
 //		this.draw();
-//		t
 	}
 
 	void runStackNY() {
 		runStackMethodNoY(bx, by);
 //		this.draw();
 	}
+
+	void choice(int c, int g, int bx, int by, int ex, int ey) {
+		switch (c) {
+		case 1:
+			this.stack();
+			break;
+		case 2:
+			this.queue();
+			break;
+		case 3:
+			this.recur();
+			break;
+		default:
+			System.out.println("FuckYou");
+			System.exit(0);
+		}
+		this.setPoint(bx, by, ex, ey);
+		this.map[bx][by] = 8;
+		this.map[ex][ey] = 8;
+		switch (g) {
+		case 1:
+			this.runStack();
+			break;
+		case 2:
+			this.runStackNY();
+			break;
+		case 3:
+			this.runBack();
+			break;
+		default:
+			System.out.println("FuckYou");
+			System.exit(0);
+		}
+	}
+
 }
