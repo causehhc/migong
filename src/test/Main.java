@@ -19,7 +19,7 @@ public class Main extends Application {
 	/**
 	 * f=1:697,1497 f=2:247,473 f=3:109,209
 	 */
-	int k = 0, f = 2, num = 0;
+	int k = 0, num = 0,f = 1;//数组队列下标，开始长度，放大倍率
 	Timeline action;
 
 	@Override
@@ -39,8 +39,8 @@ public class Main extends Application {
 		 */
 		map.setMap(x, y);
 //		map.choice(1, 1, 2, 2, x - 3, y - 3);
-//		map.choice(1, 1, x - 3, y - 3, 2, 2);
-		map.choice(1, 1, rdm[0], rdm[1], rdm[2], rdm[3]);
+		map.choice(2, 2, x - 3, y - 3, 2, 2);
+//		map.choice(1, 1, rdm[0], rdm[1], rdm[2], rdm[3]);
 		System.out.println("Calculate complete!");
 
 		for (int i1 = 0; i1 < x * f; i1 += f) {
@@ -69,11 +69,12 @@ public class Main extends Application {
 				k=aimArray.length-4;
 				root.setOnKeyPressed(e1 -> {
 					switch (e1.getCode()) {
-					case ENTER:
+					case ENTER:{
 						map.count();
 						System.out.println("OK!");
-						System.exit(0);
-						break;
+//						System.exit(0);
+						break;	
+					}
 					default:
 						break;
 					}

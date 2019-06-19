@@ -10,6 +10,7 @@ public class GoMap extends CreatMap {
 	private int ey = -1;
 	private int keyb = 0;
 	private int keys = 0;
+	private String modle;
 	LinkedList<Integer> queue = new LinkedList<Integer>();
 
 	GoMap() {
@@ -417,12 +418,15 @@ public class GoMap extends CreatMap {
 		switch (c) {
 		case 1:
 			this.stack();
+			System.out.println("stack creat");
 			break;
 		case 2:
 			this.queue();
+			System.out.println("queue creat");
 			break;
 		case 3:
 			this.recur();
+			System.out.println("recur creat");
 			break;
 		default:
 			System.out.println("FuckYou");
@@ -434,17 +438,20 @@ public class GoMap extends CreatMap {
 		switch (g) {
 		case 1:
 			this.runStack();
+			System.out.println("stack run");
 			break;
 		case 2:
 			this.runStackNY();
+			System.out.println("stackNY run");
 			break;
 		case 3:
 			this.runBack();
+			System.out.println("back run");
 			break;
 		default:
 			System.out.println("FuckYou");
 			System.exit(0);
 		}
 	}
-
+	
 }
