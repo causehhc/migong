@@ -1,11 +1,13 @@
 package test;
 
+import java.awt.RenderingHints.Key;
 import java.util.Scanner;
 
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -24,23 +26,26 @@ import javafx.event.EventHandler;
 //extends Application
 
 public class Main extends Application {
-    @Override
-    public void start(Stage primaryStage)  {
-    	GoMap map=new GoMap();
-    	int x=697;
-		int y=1497;
-    	
+	int i = 0, j = 0, f = 2;
+
+	@Override
+	public void start(Stage primaryStage) {
+
+		GoMap map = new GoMap();
+		int x = 237;
+		int y = 397;
 		map.setMap(x, y);
 		map.stack();
 //		map.queue();
-		map.setPoint(2, 2, x-3, y-3);
+		map.setPoint(2, 2, x - 3, y - 3);
 		map.runStack();
 //		map.runBack();
 		System.out.println("Calculate complete!");
-		
-        Group root = new Group();
-        Scene scene = new Scene(root, 1900, 1000, Color.WHITE);
-        
+
+//        Group root = new Group();
+		Pane root = new Pane();
+		Scene scene = new Scene(root, 1900, 1000, Color.WHITE);
+
 //        Rectangle rect = new Rectangle(190, 395, 20, 5); 
 //        Rotate rot = new Rotate(0, 200, 200); 
 //        rect.getTransforms().add(rot); 
@@ -49,35 +54,47 @@ public class Main extends Application {
 //        path.setStroke(Color.RED); 
 //        path.setFill(null);
 //        root.getChildren().add(path);
-        
-        primaryStage.setScene(scene);
-        primaryStage.show();
 
-        int f=1;
-        Rectangle r; 
-        for(int i=0;i<x*f;i+=f) {
-        	for(int j=0;j<y*f;j+=f) {
-        		r= new Rectangle();
-	        	r.setX(j*f);
-			    r.setY(i*f);
-		    	r.setWidth(2*f);
-			    r.setHeight(2*f);	
-			    if(map.trans()[i/f][j/f]==0) {
-			    	r.setFill(Color.BLACK);
-			    }
-			    else if(map.trans()[i/f][j/f]==8){
-			    	r.setFill(Color.WHITE);
-			    }
-			    else if(map.trans()[i/f][j/f]==1){
-			    	r.setFill(Color.RED);
-			    }
-			    else {
-			    	r.setFill(Color.GREY);
-			    }
-			    	root.getChildren().add(r);
-    		}
-    	}
-        
+		root.setOnKeyPressed(e -> {
+
+			switch (e.getCode()) {
+			case ENTER:
+				int yy = 0;
+				while (yy++ < 3 * y) {
+					Rectangle r = new Rectangle();
+					r.setX(j * f);
+					r.setY(i * f);
+					r.setWidth(2 * f);
+					r.setHeight(2 * f);
+					if (map.trans()[i / f][j / f] == 0) {
+						r.setFill(Color.BLACK);
+					} else if (map.trans()[i / f][j / f] == 8) {
+						r.setFill(Color.WHITE);
+					} else if (map.trans()[i / f][j / f] == 1) {
+						r.setFill(Color.RED);
+					} else {
+						r.setFill(Color.GREY);
+					}
+					root.getChildren().add(r);
+					j += f;
+					if (j >= y * f) {
+						j = 0;
+						i += f;
+					}
+				}
+
+				break;
+
+			default:
+				break;
+			}
+
+		});
+
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		root.requestFocus();
+
 //        Timeline line = new Timeline(30); 
 //	    KeyFrame key1 = new KeyFrame(
 //	      new javafx.util.Duration(0), 
@@ -91,10 +108,10 @@ public class Main extends Application {
 //	    scene.addEventHandler(MouseEvent.MOUSE_CLICKED, evt->{ 
 //	     line.playFromStart(); 
 //	    });
-        
+
 	}
-	
-    public static void main(String[] args) {
+
+	public static void main(String[] args) {
 		launch(args);
 //		Scanner in=new Scanner(System.in);
 //		GoMap map=new GoMap();
