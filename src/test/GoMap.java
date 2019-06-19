@@ -396,6 +396,7 @@ public class GoMap extends CreatMap {
 	void runStack() {
 		runStackMethod(bx, by);
 //		this.draw();
+//		t
 	}
 
 	void runStackNY() {
