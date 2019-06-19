@@ -180,7 +180,7 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			while (true) {
-//				this.draw(x,y);
+				this.draw(x,y);
 				int k = 0;
 				while (map[x][y + 1] == 8 && k == 0) {
 					k = 1;

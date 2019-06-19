@@ -61,7 +61,7 @@ public class Main extends Application {
 					r.setFill(Color.RED);
 					root.getChildren().add(r);
 					if (k == aimArray.length) {
-						System.exit(0);
+//						System.exit(0);
 					}
 				}
 				break;
