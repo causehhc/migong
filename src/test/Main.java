@@ -12,25 +12,24 @@ import javafx.application.Application;
 
 //extends Application
 
-public class Main  {
-	/*
-	int k = 0, f = 1;
+public class Main extends Application {
+	int k = 0, f = 2;
 
 	@Override
 	public void start(Stage primaryStage) {
+		Scanner in=new Scanner(System.in);
 		Pane root = new Pane();
 		GoMap map = new GoMap();
-		int x = 237;
-		int y = 397;
+		int x = 37;
+		int y = 107;
 		map.setMap(x, y);
-		map.setPoint(2, 2, x - 3, y - 3);
-
+		map.setPoint(27, 6, x-3, y-3);
 		map.stack();
 //		map.queue();
-		map.runStack();
+//		map.runStack();
+		map.runStackNY();
 //		map.runBack();
-		Object[] aimArray = map.catchPoint().toArray().clone();
-//		System.out.println(aimArray[0]);
+		Object[] aimArray = map.queue.toArray().clone();
 
 		for (int i1 = 0; i1 < x * f; i1 += f) {
 			for (int j1 = 0; j1 < y * f; j1 += f) {
@@ -54,18 +53,35 @@ public class Main  {
 
 			switch (e.getCode()) {
 			case ENTER:
-				int n = 0;
-				while (n++ < 30) {
-					Rectangle r = new Rectangle();
-					r.setY((int) (aimArray[k++]) * f);
-					r.setX((int) (aimArray[k++]) * f);
-					r.setWidth(2 * f);
-					r.setHeight(2 * f);
-					r.setFill(Color.RED);
-					root.getChildren().add(r);
-					if (k == aimArray.length) {
-//						System.exit(0);
+				if (k >= aimArray.length) {
+					try {
+						
+						Thread.sleep(1000);
+						map.count();
+						System.out.println("OK!");
+						System.exit(0);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
+				}
+				int n = 0;
+				while (n++ < 1) {
+					Rectangle r = new Rectangle();
+					int y1 = ((int) (aimArray[k++]) * f * f);
+					int x1 = ((int) (aimArray[k++]) * f * f);
+//					System.out.println(y1 + " " + x1);
+					r.setX(x1);
+					r.setY(y1);
+					r.setWidth(2* f);
+					r.setHeight(2* f);
+					if (map.trans()[y1 / (f*f)][x1 / (f*f)] == 1) {
+						r.setFill(Color.RED);
+					} else {
+						r.setFill(Color.GREY);
+					}
+					root.getChildren().add(r);
+
 				}
 				break;
 
@@ -79,22 +95,25 @@ public class Main  {
 		primaryStage.show();
 		root.requestFocus();
 	}
-	*/
-
+	
 	public static void main(String[] args) {
-//		launch(args);
-		Scanner in=new Scanner(System.in);
-		GoMap map=new GoMap();
-		int i=17;
-		int j=67;
-		map.setMap(i, j);
+		launch(args);
+//		Scanner in=new Scanner(System.in);
+//		GoMap map=new GoMap();
+//		int i=17;
+//		int j=67;
+//		map.setMap(i, j);
+//		
+//		
 //		map.stack();
-//		map.recur();
-		map.queue();
-		
-		map.setPoint(2, 2,i-3,j-3);
-//		map.runBack();
-		map.runStack();
-		map.print();
+////		map.recur();
+////		map.queue();
+//		map.print();
+//		in.nextLine();
+//		map.setPoint(2, 2,i-3,j-3);
+////		map.runBack();
+////		map.draw();
+//		map.runStack();
+//		map.print();
 	}
 }

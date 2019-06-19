@@ -204,7 +204,6 @@ public class CreatMap {
 //		        }
 //				System.out.println();
 //				draw();
-
 			}
 			x = st.pop();
 			y = st.pop();
