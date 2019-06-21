@@ -10,11 +10,10 @@ public class GoMap extends CreatMap {
 	private int ey = -1;
 	private int keyb = 0;
 	private int keys = 0;
-	private String modle;
-	LinkedList<Integer> queue = new LinkedList<Integer>();
+	LinkedList<Integer> queue;
 
 	GoMap() {
-
+		queue = new LinkedList<Integer>();
 	}
 
 	void setPoint(int bx, int by, int ex, int ey) {
@@ -58,7 +57,8 @@ public class GoMap extends CreatMap {
 		return n;
 	}
 
-	private boolean runBackMethod(int x, int y) {
+	private boolean runBackMethod(int x, int y) {// 無效優化
+
 		if (keyb == 1) {
 			return false;
 		}
@@ -80,7 +80,7 @@ public class GoMap extends CreatMap {
 			if (keyb == 1) {
 				return false;
 			}
-			map[x][y] = 3;// 3为一个解，8为多解
+			map[x][y] = 3;
 		}
 		return true;
 	}
@@ -97,7 +97,8 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = keys = 1;
+				k = 1;
+				keys = 1;
 //				System.out.println("下图路径数:"+this.count1());
 //				this.print();
 				break;
@@ -117,7 +118,8 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = keys = 1;
+				k = 1;
+				keys = 1;
 //				System.out.println("下图路径数:"+this.count1());
 //				this.print();
 				break;
@@ -137,7 +139,8 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = keys = 1;
+				k = 1;
+				keys = 1;
 //				System.out.println("下图路径数:"+this.count1());
 //				this.print();
 				break;
@@ -158,7 +161,8 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = keys = 1;
+				k = 1;
+				keys = 1;
 //				System.out.println("下图路径数:"+this.count1());
 //				this.print();
 				break;
@@ -219,7 +223,7 @@ public class GoMap extends CreatMap {
 		return k;
 	}
 
-	private void runStackMethod(int x, int y) {
+	private void runStackMethod(int x, int y) {// 相對最優解
 		Stack<Integer> st = new Stack<Integer>();
 		st.push(y);
 		st.push(x);
@@ -278,7 +282,7 @@ public class GoMap extends CreatMap {
 					break;
 				}
 				if (k == 0 || (x == ex && y == ey)) {
-					map[x][y] = 3;// 3为一个解，8为多解
+					map[x][y] = 3;
 					queue.pollLast();
 					queue.pollLast();
 					st.pop();
@@ -453,5 +457,5 @@ public class GoMap extends CreatMap {
 			System.exit(0);
 		}
 	}
-	
+
 }
