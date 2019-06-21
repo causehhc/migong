@@ -32,17 +32,17 @@ public class CreatMap {
 	int[][] trans() {
 		return map;
 	}
-	
+
 	void clear() {
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
-				if(map[i][j]==1||map[i][j]==3) {
-					map[i][j]=8;
+				if (map[i][j] == 1 || map[i][j] == 3) {
+					map[i][j] = 8;
 				}
 			}
 		}
 	}
-	
+
 	void print() {
 		Scanner in = new Scanner(System.in);
 		for (int i = 0; i < map.length - 1; i++) {
@@ -223,15 +223,15 @@ public class CreatMap {
 		} while (!st.empty());
 	}
 
-	void queue() {
+	void queue(int c) {
 		LinkedList<Integer> que = new LinkedList<Integer>();
 		que.offer(x);
 		que.offer(y);
 		do {
+			int n = 0;
+			// 关键1:无此则走不远 
 			Integer[] temp = new Integer[que.size()];
 			que.toArray(temp);
-			int n = 0;
-			/* 关键1:无此则规则 */
 			do {
 				n = (int) (Math.random() * que.size());
 			} while (n % 2 != 0);
@@ -239,15 +239,15 @@ public class CreatMap {
 			y = temp[n + 1];
 
 			while (judge(x, y)) {
-				/* 升级:更复杂（小死胡同更少）（一个点完整之前继续随机选择） */
-				Integer[] temp2 = new Integer[que.size()];
-				que.toArray(temp2);
-				do {
-					n = (int) (Math.random() * que.size());
-				} while (n % 2 != 0);
-				x = temp2[n];
-				y = temp2[n + 1];
-
+				if (c == 1) {// 升级:更复杂（小死胡同更少）（一个点完整之前继续随机选择） 
+					Integer[] temp2 = new Integer[que.size()];
+					que.toArray(temp2);
+					do {
+						n = (int) (Math.random() * que.size());
+					} while (n % 2 != 0);
+					x = temp2[n];
+					y = temp2[n + 1];
+				}
 				int d = (int) (Math.random() * 4);
 				switch (d) {
 				case 0: {

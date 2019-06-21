@@ -4,39 +4,28 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.concurrent.CountDownLatch;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ObservableIntegerValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 
 //extends Application
 public class Main extends Application {
-	Scanner in = new Scanner(System.in);
 	GoMap map = new GoMap();
 	Timeline action;
-	int k = 0, f = 2;// 数组队列下标，放大倍率
+	int k = 0, f = 2;// TimeLine下标，放大倍率
 	int[] rdm = new int[4];
 	int winX = 1900, winY = 1000;
+	//全文小写坐标均为倒置（历史遗留问题）
 	int x = 33, y = 23;
+	int xs=50,ys=0;
 
 	void draw(GridPane root, int xs, int ys) {
 		try {
@@ -107,29 +96,33 @@ public class Main extends Application {
 		root0.setTop(root1);
 		root0.setLeft(root2);
 		root0.setRight(root3);
-
 		Button btn4 = new Button("X++");
 		Button btn5 = new Button("X--");
 		Button btn6 = new Button("Y++");
 		Button btn7 = new Button("Y--");
 		ChoiceBox<String> cb1 = new ChoiceBox<String>(
-				FXCollections.observableArrayList("深度优先算法", "广度优先算法", "回溯法", "NULL"));
+				FXCollections.observableArrayList("DFS_Stack", "DFS_Recall","BFS_Strong",  "BFS_Week", "Null"));
 		Button btn1 = new Button("FRESH");
-		Button btn2 = new Button("START1");//优化版
-		Button btn3 = new Button("START2");//未优化版
-		rdm[0] = (int) (Math.random() * (x - 5)) + 2;
-		rdm[2] = (int) (Math.random() * (x - 5)) + 2;
-		rdm[1] = (int) (Math.random() * (y - 5)) + 2;
-		rdm[3] = (int) (Math.random() * (y - 5)) + 2;
-
+		Button btn2 = new Button("DFS-Vector");//优化版
+		Button btn3 = new Button("DFS-Random");//未优化版
+		Button btn8 = new Button("DFS-Recall");//半优化版
+		Label lb1=new Label("sb");
+		Label lb2=new Label("sb");
+		
+		root0.setTop(root1);
+		root0.setLeft(root2);
+		root0.setRight(root3);
 		btn4.setTranslateX(0);
 		btn5.setTranslateX(60);
 		btn6.setTranslateX(120);
 		btn7.setTranslateX(180);
-		cb1.setTranslateX(280);
-		btn1.setTranslateX(480);
-		btn2.setTranslateX(580);
-		btn3.setTranslateX(680);
+		cb1.setTranslateX(250);
+		btn1.setTranslateX(380);
+		btn2.setTranslateX(480);
+		btn3.setTranslateX(600);
+		btn8.setTranslateX(740);
+		lb1.setTranslateY(30);
+		lb2.setTranslateY(50);
 		root1.getChildren().add(btn4);
 		root1.getChildren().add(btn5);
 		root1.getChildren().add(btn6);
@@ -138,21 +131,23 @@ public class Main extends Application {
 		root1.getChildren().add(btn1);
 		root1.getChildren().add(btn2);
 		root1.getChildren().add(btn3);
+		root1.getChildren().add(btn8);
+		root1.getChildren().add(lb1);
+		root1.getChildren().add(lb2);
 
-		Scene scene = new Scene(root0, winX, winY, Color.WHITE);//
-
+		Scene scene = new Scene(root0, winX, winY, Color.WHITE);
 		map.setMap(x, y);
 		map.setPoint(2, 2, x - 3, y - 3);
-		this.draw(root2, 0, 25);
-		this.draw(root3, -y * f * f, 25);
+		this.draw(root2, ys, xs);
+		this.draw(root3, -y * f * f, xs);
 		btn4.setOnAction(e -> {
 			this.remove(root2);
 			this.remove(root3);
 			y += 20;
 			map.setMap(x, y);
 			map.setPoint(2, 2, x - 3, y - 3);
-			this.draw(root2, 0, 25);
-			this.draw(root3, -y * f * f, 25);
+			this.draw(root2, ys, xs);
+			this.draw(root3, -y * f * f, xs);
 		});
 		btn5.setOnAction(e -> {
 			this.remove(root2);
@@ -160,8 +155,8 @@ public class Main extends Application {
 			y -= 20;
 			map.setMap(x, y);
 			map.setPoint(2, 2, x - 3, y - 3);
-			this.draw(root2, 0, 25);
-			this.draw(root3, -y * f * f, 25);
+			this.draw(root2, ys, xs);
+			this.draw(root3, -y * f * f, xs);
 		});
 		btn6.setOnAction(e -> {
 			this.remove(root2);
@@ -169,8 +164,8 @@ public class Main extends Application {
 			x += 20;
 			map.setMap(x, y);
 			map.setPoint(2, 2, x - 3, y - 3);
-			this.draw(root2, 0, 25);
-			this.draw(root3, -y * f * f, 25);
+			this.draw(root2, ys, xs);
+			this.draw(root3, -y * f * f, xs);
 		});
 		btn7.setOnAction(e -> {
 			this.remove(root2);
@@ -178,10 +173,9 @@ public class Main extends Application {
 			x -= 20;
 			map.setMap(x, y);
 			map.setPoint(2, 2, x - 3, y - 3);
-			this.draw(root2, 0, 25);
-			this.draw(root3, -y * f * f, 25);
+			this.draw(root2, ys, xs);
+			this.draw(root3, -y * f * f, xs);
 		});
-
 		cb1.getSelectionModel().selectedIndexProperty()
 				.addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
 					switch (new_val.intValue()) {
@@ -190,59 +184,81 @@ public class Main extends Application {
 						this.remove(root2);
 						this.remove(root3);
 						map.stack();
-						this.draw(root2, 0, 25);
-						this.draw(root3, -y * f * f, 25);
+						this.draw(root2, ys, xs);
+						this.draw(root3, -y * f * f, xs);
 						break;
 					}
 					case 1: {
-						map.setMap(x, y);
-						this.remove(root2);
-						this.remove(root3);
-						map.queue();
-						this.draw(root2, 0, 25);
-						this.draw(root3, -y * f * f, 25);
-						break;
-					}
-					case 2: {
 						try {
 							map.setMap(x, y);
 							this.remove(root2);
 							this.remove(root3);
 							map.recur();
-							this.draw(root2, 0, 25);
-							this.draw(root3, -y * f * f, 25);
+							this.draw(root2, ys, xs);
+							this.draw(root3, -y * f * f, xs);
 						} catch (StackOverflowError e) {
-							System.out.println("StackOverflow");
+							new AlertBox().display("Waring", "StackOverflow!");
 							break;
 						}
 						break;
 					}
+					case 2: {
+						map.setMap(x, y);
+						this.remove(root2);
+						this.remove(root3);
+						map.queue(1);//BFS_Strong
+						this.draw(root2, ys, xs);
+						this.draw(root3, -y * f * f, xs);
+						break;
+					}
+					case 3: {
+						map.setMap(x, y);
+						this.remove(root2);
+						this.remove(root3);
+						map.queue(0);//BFS_week
+						this.draw(root2, ys, xs);
+						this.draw(root3, -y * f * f, xs);
+						break;
+					}
+					
 					default:
 						map.setMap(x, y);
 					}
 
 				});
-
 		btn1.setOnAction(e -> {
 			this.remove(root2);
 			this.remove(root3);
-			this.draw(root2, 0, 25);
-			this.draw(root3, -y * f * f, 25);
+			this.draw(root2, ys, xs);
+			this.draw(root3, -y * f * f, xs);
 		});
 		btn2.setOnAction(e -> {
 			this.remove(root2);
-			this.draw(root2, 0, 25);
-			map.runStack();
+			this.draw(root2, ys, xs);
+			map.runStack();//DFS_Vector
+			lb1.setText("回溯率:"+map.count());
 			Object[] aimArray1 = map.queue.toArray().clone();
-			this.animo(root2, 0, 25, aimArray1);
-
+			this.animo(root2, 0, xs, aimArray1);
 		});
 		btn3.setOnAction(e -> {
 			this.remove(root3);
-			this.draw(root3, -y * f * f, 25);
-			map.runStackNY();
+			this.draw(root3, -y * f * f, xs);
+			map.runStackNY();//DFS_Random
+			lb2.setText("回溯率:"+map.count());
 			Object[] aimArray2 = map.queue.toArray().clone();
-			this.animo(root3, -y * f * f, 25, aimArray2);
+			this.animo(root3, -y * f * f, xs, aimArray2);
+		});
+		btn8.setOnAction(e -> {
+			try {
+				this.remove(root3);
+				this.draw(root3, -y * f * f, xs);
+				map.runBack();//DFS_Recall
+				lb2.setText("回溯率:"+map.count());
+				Object[] aimArray3 = map.queue.toArray().clone();
+				this.animo(root3, -y * f * f, xs, aimArray3);
+			} catch (StackOverflowError e1) {
+				new AlertBox().display("Waring", "StackOverflow!");
+			}
 		});
 
 		primaryStage.setScene(scene);

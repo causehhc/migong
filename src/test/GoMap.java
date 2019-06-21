@@ -23,7 +23,7 @@ public class GoMap extends CreatMap {
 		this.ey = ey;
 	}
 
-	void count() {
+	double count() {
 		int n1 = 0, n3 = 0, n0 = 0, n8 = 0;
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
@@ -41,8 +41,7 @@ public class GoMap extends CreatMap {
 				}
 			}
 		}
-		System.out.println("n1:" + n1 + " n3:" + n3 + " n0:" + n0 + " n8:" + n8);
-		System.out.println("»ØËÝÂÊn3/n1:" + ((double) n3 / n1));
+		return ((double) n3 / n1);
 	}
 
 	int count1() {
@@ -438,7 +437,7 @@ public class GoMap extends CreatMap {
 			System.out.println("stack creat");
 			break;
 		case 2:
-			this.queue();
+			this.queue(1);
 			System.out.println("queue creat");
 			break;
 		case 3:
