@@ -103,7 +103,7 @@ public class Main extends Application {
 		root.getChildren().add(btn1);
 		root.getChildren().add(btn2);
 		root.getChildren().add(btn3);
-		Scene scene = new Scene(root, 1900, 1000, Color.WHITE);//
+		Scene scene = new Scene(root, 1900, 1000, Color.WHITE);
 
 		cb1.getSelectionModel().selectedIndexProperty()
 				.addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
