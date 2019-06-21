@@ -58,6 +58,9 @@ public class GoMap extends CreatMap {
 	}
 
 	private boolean runBackMethod(int x, int y) {// ŸoÐ§ƒž»¯
+		this.clear();
+		queue.clear();
+		keys = 0;
 
 		if (keyb == 1) {
 			return false;
@@ -70,6 +73,8 @@ public class GoMap extends CreatMap {
 		}
 		if (map[x][y] == 8) {
 			map[x][y] = 1;
+			queue.offer(x);
+			queue.offer(y);
 			if (runBackMethod(x, y + 1)) {
 				if (runBackMethod(x - 1, y)) {
 					if (runBackMethod(x, y - 1)) {
@@ -81,6 +86,8 @@ public class GoMap extends CreatMap {
 				return false;
 			}
 			map[x][y] = 3;
+			queue.pollLast();
+			queue.pollLast();
 		}
 		return true;
 	}
@@ -404,18 +411,24 @@ public class GoMap extends CreatMap {
 	}
 
 	void runBack() {
+		queue.clear();
+		this.clear();
+		keys = 0;
 		runBackMethod(bx, by);
-//		this.draw();
 	}
 
 	void runStack() {
+		queue.clear();
+		this.clear();
+		keys = 0;
 		runStackMethod(bx, by);
-//		this.draw();
 	}
 
 	void runStackNY() {
+		queue.clear();
+		this.clear();
+		keys = 0;
 		runStackMethodNoY(bx, by);
-//		this.draw();
 	}
 
 	void choice(int c, int g, int bx, int by, int ex, int ey) {

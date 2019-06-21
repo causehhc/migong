@@ -28,7 +28,7 @@ public class Main extends Application {
 	 * f=1:697,1497 f=2:247,473 f=3:109,209 1.stack 2.queue 3.recur 1.stack 2.staNY
 	 * 3.back beginX beginY endX endY
 	 */
-	int k = 0 ,f = 2, numOfRt = 0;// 数组队列下标，放大倍率
+	int k = 0, f = 2, numOfRt = 0;// 数组队列下标，放大倍率
 	Timeline action;
 	int[] rdm = new int[4];
 	int x = 37;
@@ -58,16 +58,6 @@ public class Main extends Application {
 
 	void remove(Pane root) {
 		root.getChildren().remove(5, 5 + numOfRt);
-	}
-	
-	void clear() {
-		for (int i = 0; i < map.trans().length; i++) {
-			for (int j = 0; j < map.trans()[0].length; j++) {
-				if(map.trans()[i][j]==1||map.trans()[i][j]==3) {
-					map.trans()[i][j]=8;
-				}
-			}
-		}
 	}
 
 	@Override
@@ -103,7 +93,7 @@ public class Main extends Application {
 		root.getChildren().add(btn1);
 		root.getChildren().add(btn2);
 		root.getChildren().add(btn3);
-		Scene scene = new Scene(root, 1900, 1000, Color.WHITE);
+		Scene scene = new Scene(root, 1900, 1000, Color.WHITE);//
 
 		cb1.getSelectionModel().selectedIndexProperty()
 				.addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
@@ -125,7 +115,12 @@ public class Main extends Application {
 					case 2: {
 						this.remove(root);
 						map.setMap(x, y);
-						map.recur();
+						try {
+							map.recur();
+						} catch (StackOverflowError e) {
+							System.out.println("StackOverflow");
+							break;
+						}
 						this.draw(root);
 						break;
 					}
@@ -139,50 +134,40 @@ public class Main extends Application {
 				.addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
 					switch (new_val.intValue()) {
 					case 0: {
-						this.remove(root);
-						this.clear();
-						this.draw(root);
-						map.queue.clear();
-						map.draw();
 						map.runStack();
-						map.draw();
 						break;
 					}
 					case 1: {
-						this.remove(root);
-						this.clear();
-						this.draw(root);
-						map.queue.clear();
-						map.draw();
 						map.runStackNY();
-						map.draw();
 						break;
 					}
 					case 2: {
-						this.remove(root);
-						this.clear();
-						this.draw(root);
-						map.queue.clear();
-						map.draw();
-						map.runBack();
-						map.draw();
+						try {
+							map.runBack();
+						} catch (StackOverflowError e) {
+							System.out.println("StackOverflow");
+							break;
+						}
 						break;
 					}
 					default:
 						System.out.println("FuckYou");
 					}
 				});
-		
+
 		btn1.setOnAction(e -> {
 			this.remove(root);
 			this.draw(root);
 		});
 		btn2.setOnAction(e -> {
+			this.remove(root);
+			this.draw(root);
 			// 走
-			Object[] aimArray =map.queue.toArray().clone();
+			k = 0;
+			Object[] aimArray = map.queue.toArray().clone();
 			action = new Timeline(new KeyFrame(Duration.millis(1), e1 -> {
 				if (k >= aimArray.length) {
-					k=0;
+					k = 0;
 					action.stop();
 				}
 				int n = 0;
@@ -213,7 +198,7 @@ public class Main extends Application {
 			action.setCycleCount(Timeline.INDEFINITE);
 			action.play();
 		});
-		btn3.setOnAction(e->{
+		btn3.setOnAction(e -> {
 			action.stop();
 		});
 		root.setOnKeyPressed(e -> {

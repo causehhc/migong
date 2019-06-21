@@ -32,7 +32,17 @@ public class CreatMap {
 	int[][] trans() {
 		return map;
 	}
-
+	
+	void clear() {
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[0].length; j++) {
+				if(map[i][j]==1||map[i][j]==3) {
+					map[i][j]=8;
+				}
+			}
+		}
+	}
+	
 	void print() {
 		Scanner in = new Scanner(System.in);
 		for (int i = 0; i < map.length - 1; i++) {
