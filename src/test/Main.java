@@ -25,7 +25,6 @@ public class Main extends Application {
 	Timeline action;
 	int k = 0, f = 2;// TimeLine下标，放大倍率
 	int[] rdm = new int[4];
-
 	int winX = 1900, winY = 1000;
 	// 全文小写坐标均为倒置（历史遗留问题）
 	int x = 33, y = 23;
@@ -73,14 +72,13 @@ public class Main extends Application {
 				r.setTranslateY(y1 + ys);
 				r.setWidth(f * f);
 				r.setHeight(f * f);
-				if (map.trans()[y1 / (f * f)][x1 / (f * f)] == 1) {
-					if (k <= 20) {
-						r.setFill(Color.CHARTREUSE);
-					} else if (k >= aimArray.length - 20) {
-						r.setFill(Color.CHARTREUSE);
-					} else {
-						r.setFill(Color.RED);
-					}
+				if (k < 3) {
+					r.setFill(Color.RED);
+
+				} else if (k > aimArray.length - 1) {
+					r.setFill(Color.RED);
+				} else if (map.trans()[y1 / (f * f)][x1 / (f * f)] == 1) {
+					r.setFill(Color.CHARTREUSE);
 				} else {
 					r.setFill(Color.DARKGRAY);
 				}
@@ -93,6 +91,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
+
 		BorderPane root0 = new BorderPane();
 		GridPane root1 = new GridPane();
 		GridPane root2 = new GridPane();
@@ -113,6 +112,9 @@ public class Main extends Application {
 		Label lb1 = new Label("sb");
 		Label lb2 = new Label("sb");
 		CheckBox checkBox = new CheckBox("Random");
+		Button btn9 = new Button("+");
+		Button btn10 = new Button("-");
+
 		root0.setTop(root1);
 		root0.setLeft(root2);
 		root0.setRight(root3);
@@ -120,14 +122,16 @@ public class Main extends Application {
 		btn5.setTranslateX(60);
 		btn6.setTranslateX(120);
 		btn7.setTranslateX(180);
-		cb1.setTranslateX(250);
-		btn1.setTranslateX(380);
-		btn2.setTranslateX(480);
-		btn3.setTranslateX(600);
-		btn8.setTranslateX(740);
+		btn9.setTranslateX(230);
+		btn10.setTranslateX(270);
+		cb1.setTranslateX(350);
+		btn1.setTranslateX(480);
+		btn2.setTranslateX(580);
+		btn3.setTranslateX(690);
+		btn8.setTranslateX(810);
 		lb1.setTranslateY(30);
 		lb2.setTranslateY(50);
-		checkBox.setTranslateX(840);
+		checkBox.setTranslateX(920);
 		root1.getChildren().add(btn4);
 		root1.getChildren().add(btn5);
 		root1.getChildren().add(btn6);
@@ -140,11 +144,15 @@ public class Main extends Application {
 		root1.getChildren().add(lb1);
 		root1.getChildren().add(lb2);
 		root1.getChildren().add(checkBox);
+		root1.getChildren().add(btn9);
+		root1.getChildren().add(btn10);
 
 		Scene scene = new Scene(root0, winX, winY, Color.WHITE);
 		map.setMap(x, y);
+		map.setPoint(2, 2, x - 3, y - 3);
 		this.draw(root2, ys, xs);
 		this.draw(root3, -y * f * f, xs);
+
 		btn4.setOnAction(e -> {
 			this.remove(root2);
 			this.remove(root3);
@@ -154,6 +162,7 @@ public class Main extends Application {
 			this.draw(root2, ys, xs);
 			this.draw(root3, -y * f * f, xs);
 		});
+
 		btn5.setOnAction(e -> {
 			this.remove(root2);
 			this.remove(root3);
@@ -163,6 +172,7 @@ public class Main extends Application {
 			this.draw(root2, ys, xs);
 			this.draw(root3, -y * f * f, xs);
 		});
+
 		btn6.setOnAction(e -> {
 			this.remove(root2);
 			this.remove(root3);
@@ -172,6 +182,7 @@ public class Main extends Application {
 			this.draw(root2, ys, xs);
 			this.draw(root3, -y * f * f, xs);
 		});
+
 		btn7.setOnAction(e -> {
 			this.remove(root2);
 			this.remove(root3);
@@ -181,6 +192,27 @@ public class Main extends Application {
 			this.draw(root2, ys, xs);
 			this.draw(root3, -y * f * f, xs);
 		});
+
+		btn9.setOnAction(e -> {
+			this.remove(root2);
+			this.remove(root3);
+			f++;
+			map.setMap(x, y);
+			map.setPoint(2, 2, x - 3, y - 3);
+			this.draw(root2, ys, xs);
+			this.draw(root3, -y * f * f, xs);
+		});
+
+		btn10.setOnAction(e -> {
+			this.remove(root2);
+			this.remove(root3);
+			f--;
+			map.setMap(x, y);
+			map.setPoint(2, 2, x - 3, y - 3);
+			this.draw(root2, ys, xs);
+			this.draw(root3, -y * f * f, xs);
+		});
+
 		cb1.getSelectionModel().selectedIndexProperty()
 				.addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
 					switch (new_val.intValue()) {
@@ -231,57 +263,67 @@ public class Main extends Application {
 					}
 
 				});
+
 		btn1.setOnAction(e -> {
+			action.stop();
 			this.remove(root2);
 			this.remove(root3);
 			this.draw(root2, ys, xs);
 			this.draw(root3, -y * f * f, xs);
 		});
+
 		btn2.setOnAction(e -> {
 			this.remove(root2);
 			this.draw(root2, ys, xs);
+			k = 0;
+			map.clear();
 			map.runStack();// DFS_Vector
-			lb1.setText("回溯率:" + map.count());
+			lb1.setText("回溯率: " + map.count());
 			Object[] aimArray1 = map.queue.toArray().clone();
 			this.animo(root2, 0, xs, aimArray1);
 		});
+
 		btn3.setOnAction(e -> {
 			this.remove(root3);
 			this.draw(root3, -y * f * f, xs);
+			k = 0;
+			map.clear();
 			map.runStackNY();// DFS_Random
-			lb2.setText("回溯率:" + map.count());
-			Object[] aimArray2 = map.queue.toArray().clone();
-			this.animo(root3, -y * f * f, xs, aimArray2);
+			lb2.setText("回溯率: " + map.count());
+			Object[] aimArray3 = map.queue.toArray().clone();
+			this.animo(root3, -y * f * f, xs, aimArray3);
 		});
+
 		btn8.setOnAction(e -> {
 			try {
 				this.remove(root3);
 				this.draw(root3, -y * f * f, xs);
+				k = 0;
+				map.clear();
 				map.runBack();// DFS_Recall
-				lb2.setText("回溯率:" + map.count());
-				Object[] aimArray3 = map.queue.toArray().clone();
-				this.animo(root3, -y * f * f, xs, aimArray3);
+				lb2.setText("回溯率: " + map.count());
+				Object[] aimArray2 = map.queue.toArray().clone();
+				this.animo(root3, 0, xs, aimArray2);
 			} catch (StackOverflowError e1) {
 				new AlertBox().display("Waring", "StackOverflow!");
 			}
 		});
+
 		checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) {
 				if (checkBox.isSelected()) {
-					rdm[0] = (int) (Math.random() * (x - 5)) + 2;
-					rdm[2] = (int) (Math.random() * (x - 5)) + 2;
-					rdm[1] = (int) (Math.random() * (y - 5)) + 2;
-					rdm[3] = (int) (Math.random() * (y - 5)) + 2;
+					rdm[0] = (int) (Math.random() * (x - 5) + 2);
+					rdm[2] = (int) (Math.random() * (x - 5) + 2);
+					rdm[1] = (int) (Math.random() * (y - 5) + 2);
+					rdm[3] = (int) (Math.random() * (y - 5) + 2);
 					map.clear();
-					map.setPoint(rdm[0], rdm[1], rdm[2], rdm[3]);
+					map.setPoint(rdm[0] , rdm[1] , rdm[2], rdm[3]);
 				} else {
 					map.clear();
 					map.setPoint(2, 2, x - 3, y - 3);
 				}
 			}
 		});
-
-//		((GridPane) scene.getRoot()).getChildren().add(checkBox);
 
 		primaryStage.setScene(scene);
 		primaryStage.show();

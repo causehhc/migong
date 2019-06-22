@@ -21,6 +21,7 @@ public class GoMap extends CreatMap {
 		this.by = by;
 		this.ex = ex;
 		this.ey = ey;
+		map[bx][by]=map[ex][ey]=8;
 	}
 
 	double count() {

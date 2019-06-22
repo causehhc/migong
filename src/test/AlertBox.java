@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 public class AlertBox {
 	public void display(String title, String message) {
 		Stage window = new Stage();
-		window.setTitle(title);
+		window.setTitle("Waring");
 		window.initModality(Modality.APPLICATION_MODAL);// modalityÒªÊ¹ÓÃModality.APPLICATION_MODEL
 		window.setMinWidth(200);
 		window.setMinHeight(150);
