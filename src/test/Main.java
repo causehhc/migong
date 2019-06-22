@@ -143,7 +143,6 @@ public class Main extends Application {
 
 		Scene scene = new Scene(root0, winX, winY, Color.WHITE);
 		map.setMap(x, y);
-		map.setPoint(2, 2, x - 3, y - 3);
 		this.draw(root2, ys, xs);
 		this.draw(root3, -y * f * f, xs);
 		btn4.setOnAction(e -> {
