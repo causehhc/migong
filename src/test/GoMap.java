@@ -408,12 +408,7 @@ public class GoMap extends CreatMap {
 		queue.clear();
 		this.clear();
 		keyb = 0;
-		try {
-			runBackMethod(bx, by);
-		} catch (StackOverflowError e1) {
-			new AlertBox().display("Waring", "StackOverflow!");
-		}
-		
+		runBackMethod(bx, by);
 	}
 
 	void runStack() {

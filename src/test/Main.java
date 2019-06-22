@@ -106,8 +106,8 @@ public class Main extends Application {
 		Button btn2 = new Button("DFS-Vector");// 优化版
 		Button btn3 = new Button("DFS-Random");// 未优化版
 		Button btn8 = new Button("DFS-Recall");// 半优化版
-		Label lb1 = new Label("sb");
-		Label lb2 = new Label("sb");
+		Label lb1 = new Label("回溯率: ");
+		Label lb2 = new Label("回溯率: ");
 		CheckBox checkBox = new CheckBox("Random");
 		Button btn9 = new Button("+");
 		Button btn10 = new Button("-");
@@ -292,14 +292,18 @@ public class Main extends Application {
 		});
 
 		btn8.setOnAction(e -> {
-			this.remove(root3);
-			this.draw(root3, -y * f * f, xs);
-			k = 0;
-			map.clear();
-			map.runBack();// DFS_Recall
-			lb2.setText("回溯率: " + map.count());
-			Object[] aimArray3 = map.queue.toArray().clone();
-			this.animo(root3, -y * f * f, xs, aimArray3);
+			try {
+				this.remove(root3);
+				this.draw(root3, -y * f * f, xs);
+				k = 0;
+				map.clear();
+				map.runBack();// DFS_Recall
+				lb2.setText("回溯率: " + map.count());
+				Object[] aimArray3 = map.queue.toArray().clone();
+				this.animo(root3, -y * f * f, xs, aimArray3);
+			} catch (StackOverflowError e1) {
+				new AlertBox().display("Waring", "StackOverflow!");
+			}
 		});
 
 		checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
