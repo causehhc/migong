@@ -58,10 +58,6 @@ public class GoMap extends CreatMap {
 	}
 
 	private boolean runBackMethod(int x, int y) {// ŸoÐ§ƒž»¯
-		this.clear();
-		queue.clear();
-		keys = 0;
-
 		if (keyb == 1) {
 			return false;
 		}
@@ -86,8 +82,6 @@ public class GoMap extends CreatMap {
 				return false;
 			}
 			map[x][y] = 3;
-			queue.pollLast();
-			queue.pollLast();
 		}
 		return true;
 	}
@@ -413,8 +407,13 @@ public class GoMap extends CreatMap {
 	void runBack() {
 		queue.clear();
 		this.clear();
-		keys = 0;
-		runBackMethod(bx, by);
+		keyb = 0;
+		try {
+			runBackMethod(bx, by);
+		} catch (StackOverflowError e1) {
+			new AlertBox().display("Waring", "StackOverflow!");
+		}
+		
 	}
 
 	void runStack() {

@@ -96,9 +96,6 @@ public class Main extends Application {
 		GridPane root1 = new GridPane();
 		GridPane root2 = new GridPane();
 		GridPane root3 = new GridPane();
-		root0.setTop(root1);
-		root0.setLeft(root2);
-		root0.setRight(root3);
 		Button btn4 = new Button("X++");
 		Button btn5 = new Button("X--");
 		Button btn6 = new Button("Y++");
@@ -290,23 +287,19 @@ public class Main extends Application {
 			map.clear();
 			map.runStackNY();// DFS_Random
 			lb2.setText("回溯率: " + map.count());
-			Object[] aimArray3 = map.queue.toArray().clone();
-			this.animo(root3, -y * f * f, xs, aimArray3);
+			Object[] aimArray2 = map.queue.toArray().clone();
+			this.animo(root3, -y * f * f, xs, aimArray2);
 		});
 
 		btn8.setOnAction(e -> {
-			try {
-				this.remove(root3);
-				this.draw(root3, -y * f * f, xs);
-				k = 0;
-				map.clear();
-				map.runBack();// DFS_Recall
-				lb2.setText("回溯率: " + map.count());
-				Object[] aimArray2 = map.queue.toArray().clone();
-				this.animo(root3, 0, xs, aimArray2);
-			} catch (StackOverflowError e1) {
-				new AlertBox().display("Waring", "StackOverflow!");
-			}
+			this.remove(root3);
+			this.draw(root3, -y * f * f, xs);
+			k = 0;
+			map.clear();
+			map.runBack();// DFS_Recall
+			lb2.setText("回溯率: " + map.count());
+			Object[] aimArray3 = map.queue.toArray().clone();
+			this.animo(root3, -y * f * f, xs, aimArray3);
 		});
 
 		checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -317,7 +310,7 @@ public class Main extends Application {
 					rdm[1] = (int) (Math.random() * (y - 5) + 2);
 					rdm[3] = (int) (Math.random() * (y - 5) + 2);
 					map.clear();
-					map.setPoint(rdm[0] , rdm[1] , rdm[2], rdm[3]);
+					map.setPoint(rdm[0], rdm[1], rdm[2], rdm[3]);
 				} else {
 					map.clear();
 					map.setPoint(2, 2, x - 3, y - 3);
