@@ -13,6 +13,10 @@ public class CreatMap {
 
 	}
 
+	int[][] trans() {
+		return map;
+	}
+
 	void setMap(int x, int y) {
 		map = new int[x][y];
 		while (true) {
@@ -27,10 +31,6 @@ public class CreatMap {
 				map[i][j] = 1;
 			}
 		}
-	}
-
-	int[][] trans() {
-		return map;
 	}
 
 	void clear() {
@@ -74,6 +74,7 @@ public class CreatMap {
 		}
 		System.out.println();
 //		in.nextLine();
+//		in.close();
 	}
 
 	void draw(int x, int y) {
@@ -92,6 +93,7 @@ public class CreatMap {
 			System.out.println();
 		}
 		in.nextLine();
+//		in.close();
 	}
 
 	void draw() {
@@ -103,6 +105,7 @@ public class CreatMap {
 			System.out.println();
 		}
 		in.nextLine();
+//		in.close();
 	}
 
 	private boolean judge(int x, int y) {
@@ -115,7 +118,7 @@ public class CreatMap {
 
 	private boolean recursion(int x, int y) {
 //		System.out.println("push in:"+x+"+"+y);
-//		draw(map);
+//		this.draw();
 		while (judge(x, y)) {
 			int d = (int) (Math.random() * 4);
 			switch (d) {
@@ -149,7 +152,7 @@ public class CreatMap {
 			}
 			}
 		}
-//		System.out.println("pop out:"+x+"+"+y);
+//		System.out.println("pop out:" + x + "+" + y);
 		return false;
 	}
 
@@ -223,13 +226,13 @@ public class CreatMap {
 		} while (!st.empty());
 	}
 
-	void queue(int c) {
+	void queue(int c) {// c0简单c1难
 		LinkedList<Integer> que = new LinkedList<Integer>();
 		que.offer(x);
 		que.offer(y);
 		do {
+			// 关键1:无此则走不远
 			int n = 0;
-			// 关键1:无此则走不远 
 			Integer[] temp = new Integer[que.size()];
 			que.toArray(temp);
 			do {
@@ -239,7 +242,7 @@ public class CreatMap {
 			y = temp[n + 1];
 
 			while (judge(x, y)) {
-				if (c == 1) {// 升级:更复杂（小死胡同更少）（一个点完整之前继续随机选择） 
+				if (c == 1) {// 升级:更复杂（小死胡同更少）（一个点完整之前继续随机选择）
 					Integer[] temp2 = new Integer[que.size()];
 					que.toArray(temp2);
 					do {
@@ -291,9 +294,6 @@ public class CreatMap {
 //				System.out.println();
 //				draw();
 			}
-			/* 关键2:使用1st则走不完 */
-//			que.pop();
-//			que.pop();
 			que.remove(n);
 			que.remove(n);
 

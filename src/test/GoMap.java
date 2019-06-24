@@ -21,10 +21,10 @@ public class GoMap extends CreatMap {
 		this.by = by;
 		this.ex = ex;
 		this.ey = ey;
-		map[bx][by]=map[ex][ey]=8;
+		map[bx][by] = map[ex][ey] = 8;
 	}
 
-	double count() {
+	int count() {
 		int n1 = 0, n3 = 0, n0 = 0, n8 = 0;
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
@@ -42,22 +42,12 @@ public class GoMap extends CreatMap {
 				}
 			}
 		}
-		return ((double) n3 / n1);
+		n8 = n0;
+		n0 = n8;
+		return (n3 * 2 + n1);
 	}
 
-	int count1() {
-		int n = 0;
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[0].length; j++) {
-				if (map[i][j] == 1) {
-					n++;
-				}
-			}
-		}
-		return n;
-	}
-
-	private boolean runBackMethod(int x, int y) {// 無效優化
+	private boolean runBackMethod(int x, int y) {// 回溯法
 		if (keyb == 1) {
 			return false;
 		}
@@ -84,6 +74,232 @@ public class GoMap extends CreatMap {
 			map[x][y] = 3;
 		}
 		return true;
+	}
+
+	private void runStackMethodNoY(int x, int y) {
+		Stack<Integer> st = new Stack<Integer>();
+		st.push(y);
+		st.push(x);
+		queue.offer(x);
+		queue.offer(y);
+		do {
+			x = st.pop();
+			y = st.pop();
+			st.push(y);
+			st.push(x);
+			map[x][y] = 1;
+			while (true) {
+//				this.draw(x,y);
+				int k = 0;
+				while (map[x][y + 1] == 8 && k == 0) {
+					k = 1;
+					st.push(y + 1);
+					st.push(x);
+					x = st.pop();
+					y = st.pop();
+					st.push(y);
+					st.push(x);
+					map[x][y] = 1;
+					if (x == ex && y == ey) {
+						k = 1;
+//						System.out.println("下图路径数:"+this.count());
+//						this.print();
+						keys = 1;
+						break;
+					}
+				}
+				while (map[x - 1][y] == 8 && k == 0) {
+					k = 1;
+					st.push(y);
+					st.push(x - 1);
+					x = st.pop();
+					y = st.pop();
+					st.push(y);
+					st.push(x);
+					map[x][y] = 1;
+					if (x == ex && y == ey) {
+						k = 1;
+//						System.out.println("下图路径数:"+this.count());
+//						this.print();
+						keys = 1;
+						break;
+					}
+				}
+				while (map[x][y - 1] == 8 && k == 0) {
+					k = 1;
+					st.push(y - 1);
+					st.push(x);
+					x = st.pop();
+					y = st.pop();
+					st.push(y);
+					st.push(x);
+					map[x][y] = 1;
+					if (x == ex && y == ey) {
+						k = 1;
+//						System.out.println("下图路径数:"+this.count());
+//						this.print();
+						keys = 1;
+						break;
+					}
+				}
+				while (map[x + 1][y] == 8 && k == 0) {
+					k = 1;
+					st.push(y);
+					st.push(x + 1);
+					x = st.pop();
+					y = st.pop();
+					st.push(y);
+					st.push(x);
+					map[x][y] = 1;
+					if (x == ex && y == ey) {
+						k = 1;
+//						System.out.println("下图路径数:"+this.count());
+//						this.print();
+						keys = 1;
+						break;
+					}
+				}
+				x = st.pop();
+				y = st.pop();
+				st.push(y);
+				st.push(x);
+				queue.offer(x);
+				queue.offer(y);
+				if (keys == 1) {
+					break;
+				}
+				if (k == 0 || (x == ex && y == ey)) {
+					map[x][y] = 3;
+					queue.pollLast();
+					queue.pollLast();
+					st.pop();
+					st.pop();
+					break;
+				}
+			}
+			if (keys == 1) {
+				break;
+			}
+		} while (!st.empty());
+	}
+
+	private void runQueueMethodNoY(int x, int y) {
+		LinkedList<Integer> que = new LinkedList<Integer>();
+		que.offer(x);
+		que.offer(y);
+		queue.offer(x);
+		queue.offer(y);
+
+		do {
+
+			int n = 0;
+			Integer[] temp = new Integer[que.size()];
+			que.toArray(temp);
+//			do {
+//				n = (int) (Math.random() * que.size());
+//			} while (n % 2 != 0);
+
+			map[x][y] = 1;
+			while (true) {
+				x = temp[n];
+				y = temp[n + 1];
+				int k = 0;
+				while (map[x][y + 1] == 8 && k == 0) {
+					k = 1;
+					que.offer(x);
+					que.offer(y + 1);
+					y = que.pollLast();
+					x = que.pollLast();
+					que.offer(x);
+					que.offer(y);
+					map[x][y] = 1;
+					if (x == ex && y == ey) {
+						k = 1;
+//						System.out.println("下图路径数:" + this.count());
+//						this.print();
+						keys = 1;
+						break;
+					}
+				}
+				while (map[x - 1][y] == 8 && k == 0) {
+					k = 1;
+					que.offer(x - 1);
+					que.offer(y);
+					y = que.pollLast();
+					x = que.pollLast();
+					que.offer(x);
+					que.offer(y);
+					map[x][y] = 1;
+					if (x == ex && y == ey) {
+						k = 1;
+//						System.out.println("下图路径数:" + this.count());
+//						this.print();
+						keys = 1;
+						break;
+					}
+				}
+				while (map[x][y - 1] == 8 && k == 0) {
+					k = 1;
+					que.offer(x);
+					que.offer(y - 1);
+					y = que.pollLast();
+					x = que.pollLast();
+					que.offer(x);
+					que.offer(y);
+					map[x][y] = 1;
+					if (x == ex && y == ey) {
+						k = 1;
+//						System.out.println("下图路径数:" + this.count());
+//						this.print();
+						keys = 1;
+						break;
+					}
+				}
+				while (map[x + 1][y] == 8 && k == 0) {
+					k = 1;
+					que.offer(x + 1);
+					que.offer(y);
+					y = que.pollLast();
+					x = que.pollLast();
+					que.offer(x);
+					que.offer(y);
+					map[x][y] = 1;
+					if (x == ex && y == ey) {
+						k = 1;
+//						System.out.println("下图路径数:" + this.count());
+//						this.print();
+						keys = 1;
+						break;
+					}
+				}
+				y = que.pollLast();
+				x = que.pollLast();
+				que.offer(x);
+				que.offer(y);
+				queue.offer(x);
+				queue.offer(y);
+
+//				System.out.print(queue.toString());
+//				System.out.println();
+//				this.draw(x,y);
+
+				if (keys == 1) {
+					break;
+				}
+				if (k == 0 || (x == ex && y == ey)) {
+					map[x][y] = 3;
+					queue.pollLast();
+					queue.pollLast();
+					que.remove(n);
+					que.remove(n);
+					break;
+				}
+			}
+			n += 2;
+			if (keys == 1) {
+				break;
+			}
+		} while (!que.isEmpty());
 	}
 
 	private int way0(Stack<Integer> st, int x, int y, int k) {
@@ -297,95 +513,204 @@ public class GoMap extends CreatMap {
 		} while (!st.empty());
 	}
 
-	private void runStackMethodNoY(int x, int y) {
-		Stack<Integer> st = new Stack<Integer>();
-		st.push(y);
-		st.push(x);
+	private int way0(LinkedList<Integer> que, int x, int y, int k) {
+		while (map[x][y + 1] == 8 && k == 0) {
+			k = 1;
+			que.offer(x);
+			que.offer(y + 1);
+			y = que.pollLast();
+			x = que.pollLast();
+			que.offer(x);
+			que.offer(y);
+			map[x][y] = 1;
+			if (x == ex && y == ey) {
+				k = 1;
+//				System.out.println("下图路径数:" + this.count());
+//				this.print();
+				keys = 1;
+				break;
+			}
+		}
+		return k;
+	}
+
+	private int way1(LinkedList<Integer> que, int x, int y, int k) {
+		while (map[x - 1][y] == 8 && k == 0) {
+			k = 1;
+			que.offer(x - 1);
+			que.offer(y);
+			y = que.pollLast();
+			x = que.pollLast();
+			que.offer(x);
+			que.offer(y);
+			map[x][y] = 1;
+			if (x == ex && y == ey) {
+				k = 1;
+//				System.out.println("下图路径数:" + this.count());
+//				this.print();
+				keys = 1;
+				break;
+			}
+		}
+		return k;
+	}
+
+	private int way2(LinkedList<Integer> que, int x, int y, int k) {
+		while (map[x][y - 1] == 8 && k == 0) {
+			k = 1;
+			que.offer(x);
+			que.offer(y - 1);
+			y = que.pollLast();
+			x = que.pollLast();
+			que.offer(x);
+			que.offer(y);
+			map[x][y] = 1;
+			if (x == ex && y == ey) {
+				k = 1;
+//				System.out.println("下图路径数:" + this.count());
+//				this.print();
+				keys = 1;
+				break;
+			}
+		}
+		return k;
+	}
+
+	private int way3(LinkedList<Integer> que, int x, int y, int k) {
+		while (map[x + 1][y] == 8 && k == 0) {
+			k = 1;
+			que.offer(x + 1);
+			que.offer(y);
+			y = que.pollLast();
+			x = que.pollLast();
+			que.offer(x);
+			que.offer(y);
+			map[x][y] = 1;
+			if (x == ex && y == ey) {
+				k = 1;
+//				System.out.println("下图路径数:" + this.count());
+//				this.print();
+				keys = 1;
+				break;
+			}
+		}
+		return k;
+	}
+
+	private int ways(int drect, LinkedList<Integer> que, int x, int y, int k) {// 策略组
+		if (drect == 3021) {
+			k = this.way3(que, x, y, k);
+			k = this.way0(que, x, y, k);
+			k = this.way2(que, x, y, k);
+			k = this.way1(que, x, y, k);
+		}
+		if (drect == 0312) {
+			k = this.way0(que, x, y, k);
+			k = this.way3(que, x, y, k);
+			k = this.way1(que, x, y, k);
+			k = this.way2(que, x, y, k);
+		}
+		if (drect == 3201) {
+			k = this.way3(que, x, y, k);
+			k = this.way2(que, x, y, k);
+			k = this.way0(que, x, y, k);
+			k = this.way1(que, x, y, k);
+		}
+		if (drect == 2310) {
+			k = this.way2(que, x, y, k);
+			k = this.way3(que, x, y, k);
+			k = this.way1(que, x, y, k);
+			k = this.way0(que, x, y, k);
+		}
+		if (drect == 1203) {
+			k = this.way1(que, x, y, k);
+			k = this.way2(que, x, y, k);
+			k = this.way0(que, x, y, k);
+			k = this.way3(que, x, y, k);
+		}
+		if (drect == 2130) {
+			k = this.way2(que, x, y, k);
+			k = this.way1(que, x, y, k);
+			k = this.way3(que, x, y, k);
+			k = this.way0(que, x, y, k);
+		}
+		if (drect == 1023) {
+			k = this.way1(que, x, y, k);
+			k = this.way0(que, x, y, k);
+			k = this.way2(que, x, y, k);
+			k = this.way3(que, x, y, k);
+		}
+		if (drect == 0132) {
+			k = this.way0(que, x, y, k);
+			k = this.way1(que, x, y, k);
+			k = this.way3(que, x, y, k);
+			k = this.way2(que, x, y, k);
+		}
+		return k;
+	}
+
+	private void runQueueMethod(int x, int y) {// bfs相對最優解
+		LinkedList<Integer> que = new LinkedList<Integer>();
+		que.offer(x);
+		que.offer(y);
 		queue.offer(x);
 		queue.offer(y);
+
 		do {
-			x = st.pop();
-			y = st.pop();
-			st.push(y);
-			st.push(x);
+
+			int n = 0;
+			Integer[] temp = new Integer[que.size()];
+			que.toArray(temp);
+//			do {
+//				n = (int) (Math.random() * que.size());
+//			} while (n % 2 != 0);
+
 			map[x][y] = 1;
 			while (true) {
-//				this.draw(x,y);
+				x = temp[n];
+				y = temp[n + 1];
 				int k = 0;
-				while (map[x][y + 1] == 8 && k == 0) {
-					k = 1;
-					st.push(y + 1);
-					st.push(x);
-					x = st.pop();
-					y = st.pop();
-					st.push(y);
-					st.push(x);
-					map[x][y] = 1;
-					if (x == ex && y == ey) {
-						k = 1;
-//						System.out.println("下图路径数:"+this.count());
-//						this.print();
-						keys = 1;
-						break;
-					}
+				if ((ex >= x && ey > y) || (ex > x && ey >= y)) {// 策略1
+
+					if ((ex - x) >= (ey - y))
+						k = ways(3021, que, x, y, k);
+					else
+						k = ways(0312, que, x, y, k);
+
 				}
-				while (map[x - 1][y] == 8 && k == 0) {
-					k = 1;
-					st.push(y);
-					st.push(x - 1);
-					x = st.pop();
-					y = st.pop();
-					st.push(y);
-					st.push(x);
-					map[x][y] = 1;
-					if (x == ex && y == ey) {
-						k = 1;
-//						System.out.println("下图路径数:"+this.count());
-//						this.print();
-						keys = 1;
-						break;
-					}
+				if ((ex >= x && ey < y) || (ex > x && ey <= y)) {// 策略2
+					if ((ex - x) >= (y - ey))
+						k = ways(3201, que, x, y, k);
+					else
+						k = ways(2310, que, x, y, k);
+
 				}
-				while (map[x][y - 1] == 8 && k == 0) {
-					k = 1;
-					st.push(y - 1);
-					st.push(x);
-					x = st.pop();
-					y = st.pop();
-					st.push(y);
-					st.push(x);
-					map[x][y] = 1;
-					if (x == ex && y == ey) {
-						k = 1;
-//						System.out.println("下图路径数:"+this.count());
-//						this.print();
-						keys = 1;
-						break;
-					}
+				if ((ex <= x && ey < y) || (ex < x && ey <= y)) {// 策略3
+
+					if ((x - ex) >= (y - ey))
+						k = ways(1203, que, x, y, k);
+					else
+						k = ways(2130, que, x, y, k);
+
 				}
-				while (map[x + 1][y] == 8 && k == 0) {
-					k = 1;
-					st.push(y);
-					st.push(x + 1);
-					x = st.pop();
-					y = st.pop();
-					st.push(y);
-					st.push(x);
-					map[x][y] = 1;
-					if (x == ex && y == ey) {
-						k = 1;
-//						System.out.println("下图路径数:"+this.count());
-//						this.print();
-						keys = 1;
-						break;
-					}
+				if ((ex <= x && ey > y) || (ex < x && ey >= y)) {// 策略4
+					if ((x - ex) >= (ey - y))
+						k = ways(1023, que, x, y, k);
+					else
+						k = ways(0132, que, x, y, k);
+
 				}
-				x = st.pop();
-				y = st.pop();
-				st.push(y);
-				st.push(x);
+				y = que.pollLast();
+				x = que.pollLast();
+				que.offer(x);
+				que.offer(y);
 				queue.offer(x);
 				queue.offer(y);
+
+//				System.out.print(queue.toString());
+//				System.out.println();
+//				this.draw(x,y);
+
 				if (keys == 1) {
 					break;
 				}
@@ -393,15 +718,16 @@ public class GoMap extends CreatMap {
 					map[x][y] = 3;
 					queue.pollLast();
 					queue.pollLast();
-					st.pop();
-					st.pop();
+					que.remove(n);
+					que.remove(n);
 					break;
 				}
 			}
+			n += 2;
 			if (keys == 1) {
 				break;
 			}
-		} while (!st.empty());
+		} while (!que.isEmpty());
 	}
 
 	void runBack() {
@@ -425,19 +751,33 @@ public class GoMap extends CreatMap {
 		runStackMethodNoY(bx, by);
 	}
 
+	void runQueueNY() {
+		queue.clear();
+		this.clear();
+		keys = 0;
+		runQueueMethodNoY(bx, by);
+	}
+
+	void runQueue() {
+		queue.clear();
+		this.clear();
+		keys = 0;
+		runQueueMethod(bx, by);
+	}
+
 	void choice(int c, int g, int bx, int by, int ex, int ey) {
 		switch (c) {
 		case 1:
-			this.stack();
 			System.out.println("stack creat");
+			this.stack();
 			break;
 		case 2:
-			this.queue(1);
 			System.out.println("queue creat");
+			this.queue(1);
 			break;
 		case 3:
-			this.recur();
 			System.out.println("recur creat");
+			this.recur();
 			break;
 		default:
 			System.out.println("FuckYou");
@@ -448,16 +788,24 @@ public class GoMap extends CreatMap {
 		this.map[ex][ey] = 8;
 		switch (g) {
 		case 1:
-			this.runStack();
 			System.out.println("stack run");
+			this.runStack();
 			break;
 		case 2:
-			this.runStackNY();
 			System.out.println("stackNY run");
+			this.runStackNY();
 			break;
 		case 3:
-			this.runBack();
+			System.out.println("queue run");
+			this.runQueue();
+			break;
+		case 4:
+			System.out.println("queueNY run");
+			this.runQueueNY();
+			break;
+		case 5:
 			System.out.println("back run");
+			this.runBack();
 			break;
 		default:
 			System.out.println("FuckYou");

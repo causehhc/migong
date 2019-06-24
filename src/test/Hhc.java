@@ -12,6 +12,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.LinkedList;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -20,7 +22,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 
 //extends Application
-public class Main extends Application {
+public class Hhc extends Application {
+	public static void main(String[] args) {
+		launch(args);
+//		GoMap obj=new GoMap();
+//		int x=17,y=37;
+//		obj.setMap(x, y);
+//		obj.choice(3, 1, 2, 2, x-3, y-3);
+	}
+
 	GoMap map = new GoMap();
 	Timeline action;
 	int k = 0, f = 2;// TimeLine下标，放大倍率
@@ -28,7 +38,7 @@ public class Main extends Application {
 	int winX = 1900, winY = 1000;
 	// 全文小写坐标均为倒置（历史遗留问题）
 	int x = 33, y = 23;
-	int xs = 50, ys = 0;
+	int xs = 25, ys = 0;
 
 	void draw(GridPane root, int xs, int ys) {
 		try {
@@ -105,9 +115,10 @@ public class Main extends Application {
 		Button btn1 = new Button("FRESH");
 		Button btn2 = new Button("DFS-Vector");// 优化版
 		Button btn3 = new Button("DFS-Random");// 未优化版
-		Button btn8 = new Button("DFS-Recall");// 半优化版
-		Label lb1 = new Label("回溯率: ");
-		Label lb2 = new Label("回溯率: ");
+		Button btn8 = new Button("BFS-Vector");// 优化版
+		Button btn11 = new Button("BFS-Random");// 未优化版
+		Label lb1 = new Label("计算量: ");
+		Label lb2 = new Label("计算量: ");
 		CheckBox checkBox = new CheckBox("Random");
 		Button btn9 = new Button("+");
 		Button btn10 = new Button("-");
@@ -126,9 +137,12 @@ public class Main extends Application {
 		btn2.setTranslateX(580);
 		btn3.setTranslateX(690);
 		btn8.setTranslateX(810);
-		lb1.setTranslateY(30);
-		lb2.setTranslateY(50);
-		checkBox.setTranslateX(920);
+		btn11.setTranslateX(920);
+		lb1.setTranslateX(0);
+		lb1.setTranslateY(25);
+		lb2.setTranslateX(1000);
+		lb2.setTranslateY(25);
+		checkBox.setTranslateX(1070);
 		root1.getChildren().add(btn4);
 		root1.getChildren().add(btn5);
 		root1.getChildren().add(btn6);
@@ -143,6 +157,7 @@ public class Main extends Application {
 		root1.getChildren().add(checkBox);
 		root1.getChildren().add(btn9);
 		root1.getChildren().add(btn10);
+		root1.getChildren().add(btn11);
 
 		Scene scene = new Scene(root0, winX, winY, Color.WHITE);
 		map.setMap(x, y);
@@ -275,20 +290,20 @@ public class Main extends Application {
 			k = 0;
 			map.clear();
 			map.runStack();// DFS_Vector
-			lb1.setText("回溯率: " + map.count());
-			Object[] aimArray1 = map.queue.toArray().clone();
-			this.animo(root2, 0, xs, aimArray1);
+			lb1.setText("计算量: " + map.count());
+			Object[] aimArray = map.queue.toArray().clone();
+			this.animo(root2, 0, xs, aimArray);
 		});
 
 		btn3.setOnAction(e -> {
-			this.remove(root3);
-			this.draw(root3, -y * f * f, xs);
+			this.remove(root2);
+			this.draw(root2, ys, xs);
 			k = 0;
 			map.clear();
 			map.runStackNY();// DFS_Random
-			lb2.setText("回溯率: " + map.count());
-			Object[] aimArray2 = map.queue.toArray().clone();
-			this.animo(root3, -y * f * f, xs, aimArray2);
+			lb1.setText("计算量: " + map.count());
+			Object[] aimArray = map.queue.toArray().clone();
+			this.animo(root2, 0, xs, aimArray);
 		});
 
 		btn8.setOnAction(e -> {
@@ -297,13 +312,26 @@ public class Main extends Application {
 				this.draw(root3, -y * f * f, xs);
 				k = 0;
 				map.clear();
-				map.runBack();// DFS_Recall
-				lb2.setText("回溯率: " + map.count());
-				Object[] aimArray3 = map.queue.toArray().clone();
-				this.animo(root3, -y * f * f, xs, aimArray3);
+				map.runQueue();// BFS_Vctor
+				lb2.setText("计算量: " + map.count());
+				Object[] aimArray = map.queue.toArray().clone();
+				this.animo(root3, -y * f * f, xs, aimArray);
 			} catch (StackOverflowError e1) {
 				new AlertBox().display("Waring", "StackOverflow!");
 			}
+		});
+
+		btn11.setOnAction(e -> {
+			this.remove(root3);
+			this.draw(root3, -y * f * f, xs);
+			k = 0;
+			map.clear();
+//				map.runBack();// DFS_Recall
+			map.runQueueNY();// BFS_Random
+			lb2.setText("计算量: " + map.count());
+			Object[] aimArray = map.queue.toArray().clone();
+			this.animo(root3, -y * f * f, xs, aimArray);
+
 		});
 
 		checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -326,7 +354,4 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
 }
