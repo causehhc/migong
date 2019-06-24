@@ -74,7 +74,7 @@ public class CreatMap {
 		}
 		System.out.println();
 		in.nextLine();
-//		in.close();
+		in.close();
 	}
 
 	void draw(int x, int y) {
@@ -93,7 +93,7 @@ public class CreatMap {
 			System.out.println();
 		}
 		in.nextLine();
-//		in.close();
+		in.close();
 	}
 
 	void draw() {
@@ -105,7 +105,7 @@ public class CreatMap {
 			System.out.println();
 		}
 		in.nextLine();
-//		in.close();
+		in.close();
 	}
 
 	private boolean judge(int x, int y) {
