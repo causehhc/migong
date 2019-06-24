@@ -12,7 +12,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.LinkedList;
+//import java.util.LinkedList;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -28,7 +28,8 @@ public class Hhc extends Application {
 //		GoMap obj=new GoMap();
 //		int x=17,y=37;
 //		obj.setMap(x, y);
-//		obj.choice(3, 1, 2, 2, x-3, y-3);
+//		obj.choice(1, 4, 2, 2, x-3, y-3);
+//		obj.print();
 	}
 
 	GoMap map = new GoMap();
@@ -66,34 +67,42 @@ public class Hhc extends Application {
 		root.getChildren().clear();
 	}
 
-	void animo(GridPane root, int xs, int ys, Object[] aimArray) {
+	void animo(GridPane root, int xs, int ys, Object[] aimArray, int key, int num) {
 		action = new Timeline(new KeyFrame(Duration.millis(1), e1 -> {
 			if (k >= aimArray.length) {
 				// TODO
 				k = 0;
 				action.stop();
 			}
-			int n = 0;
-			while (n++ < 1) {
-				Rectangle r = new Rectangle();
-				int y1 = ((int) (aimArray[k++]) * f * f);
-				int x1 = ((int) (aimArray[k++]) * f * f);
-				r.setTranslateX(x1 + xs);
-				r.setTranslateY(y1 + ys);
-				r.setWidth(f * f);
-				r.setHeight(f * f);
-				if (k < 3) {
-					r.setFill(Color.RED);
+			Rectangle r = new Rectangle();
+			int y1 = ((int) (aimArray[k++]) * f * f);
+			int x1 = ((int) (aimArray[k++]) * f * f);
+			r.setTranslateX(x1 + xs);
+			r.setTranslateY(y1 + ys);
+			r.setWidth(f * f);
+			r.setHeight(f * f);
+			if (k < 3) {
+				r.setFill(Color.RED);
 
-				} else if (k > aimArray.length - 1) {
-					r.setFill(Color.RED);
-				} else if (map.trans()[y1 / (f * f)][x1 / (f * f)] == 1) {
+			} else if (k > aimArray.length - 1) {
+				r.setFill(Color.RED);
+			} else if (map.trans()[y1 / (f * f)][x1 / (f * f)] == 1) {
+				if (k == 0) {
 					r.setFill(Color.CHARTREUSE);
 				} else {
-					r.setFill(Color.DARKGRAY);
+					if (k < num+2) {
+						r.setFill(Color.DARKGRAY);
+					} else if (k == num+2) {
+						r.setFill(Color.RED);
+					} else {
+						r.setFill(Color.CHARTREUSE);
+					}
 				}
-				root.getChildren().add(r);
+			} else {
+				r.setFill(Color.DARKGRAY);
 			}
+			root.getChildren().add(r);
+
 		}));
 		action.setCycleCount(Timeline.INDEFINITE);
 		action.play();
@@ -278,6 +287,8 @@ public class Hhc extends Application {
 
 		btn1.setOnAction(e -> {
 			action.stop();
+			map.clear();
+			map.queue.clear();
 			this.remove(root2);
 			this.remove(root3);
 			this.draw(root2, ys, xs);
@@ -291,8 +302,8 @@ public class Hhc extends Application {
 			map.clear();
 			map.runStack();// DFS_Vector
 			lb1.setText("计算量: " + map.count());
-			Object[] aimArray = map.queue.toArray().clone();
-			this.animo(root2, 0, xs, aimArray);
+			Object[] aimArray1 = map.queue.toArray().clone();
+			this.animo(root2, 0, xs, aimArray1, 0, 0);
 		});
 
 		btn3.setOnAction(e -> {
@@ -302,23 +313,20 @@ public class Hhc extends Application {
 			map.clear();
 			map.runStackNY();// DFS_Random
 			lb1.setText("计算量: " + map.count());
-			Object[] aimArray = map.queue.toArray().clone();
-			this.animo(root2, 0, xs, aimArray);
+			Object[] aimArray2 = map.queue.toArray().clone();
+			this.animo(root2, 0, xs, aimArray2, 0, 0);
 		});
 
 		btn8.setOnAction(e -> {
-			try {
-				this.remove(root3);
-				this.draw(root3, -y * f * f, xs);
-				k = 0;
-				map.clear();
-				map.runQueue();// BFS_Vctor
-				lb2.setText("计算量: " + map.count());
-				Object[] aimArray = map.queue.toArray().clone();
-				this.animo(root3, -y * f * f, xs, aimArray);
-			} catch (StackOverflowError e1) {
-				new AlertBox().display("Waring", "StackOverflow!");
-			}
+			this.remove(root3);
+			this.draw(root3, -y * f * f, xs);
+			k = 0;
+			map.clear();
+			int num = map.runQueue();// BFS_Vctor
+			lb2.setText("计算量: " + map.count2());
+			Object[] aimArray3 = map.queue.toArray().clone();
+			System.out.println(num + " " + map.queue.size());
+			this.animo(root3, -y * f * f, xs, aimArray3, 1, num);
 		});
 
 		btn11.setOnAction(e -> {
@@ -326,11 +334,11 @@ public class Hhc extends Application {
 			this.draw(root3, -y * f * f, xs);
 			k = 0;
 			map.clear();
-//				map.runBack();// DFS_Recall
-			map.runQueueNY();// BFS_Random
-			lb2.setText("计算量: " + map.count());
-			Object[] aimArray = map.queue.toArray().clone();
-			this.animo(root3, -y * f * f, xs, aimArray);
+//			map.runBack();// DFS_Recall
+			int num = map.runQueueNY();// BFS_Random
+			lb2.setText("计算量: " + map.count2());
+			Object[] aimArray4 = map.queue.toArray().clone();
+			this.animo(root3, -y * f * f, xs, aimArray4, 1, num);
 
 		});
 

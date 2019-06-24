@@ -11,9 +11,11 @@ public class GoMap extends CreatMap {
 	private int keyb = 0;
 	private int keys = 0;
 	LinkedList<Integer> queue;
+	private LinkedList<Integer> queue2;
 
 	GoMap() {
 		queue = new LinkedList<Integer>();
+		queue2 = new LinkedList<Integer>();
 	}
 
 	void setPoint(int bx, int by, int ex, int ey) {
@@ -45,6 +47,29 @@ public class GoMap extends CreatMap {
 		n8 = n0;
 		n0 = n8;
 		return (n3 * 2 + n1);
+	}
+	
+	int count2() {
+		int n1 = 0, n3 = 0, n0 = 0, n8 = 0;
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[0].length; j++) {
+				if (map[i][j] == 1) {
+					n1++;
+				}
+				if (map[i][j] == 3) {
+					n3++;
+				}
+				if (map[i][j] == 0) {
+					n0++;
+				}
+				if (map[i][j] == 8) {
+					n8++;
+				}
+			}
+		}
+		n8 = n0;
+		n0 = n8;
+		return (n3 + n1*2);
 	}
 
 	private boolean runBackMethod(int x, int y) {// 回溯法
@@ -89,7 +114,6 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			while (true) {
-//				this.draw(x,y);
 				int k = 0;
 				while (map[x][y + 1] == 8 && k == 0) {
 					k = 1;
@@ -165,6 +189,11 @@ public class GoMap extends CreatMap {
 				st.push(x);
 				queue.offer(x);
 				queue.offer(y);
+
+//				System.out.print(queue.toString());
+//				System.out.println();
+//				this.draw();
+
 				if (keys == 1) {
 					break;
 				}
@@ -189,17 +218,12 @@ public class GoMap extends CreatMap {
 		que.offer(y);
 		queue.offer(x);
 		queue.offer(y);
-
+		map[x][y] = 1;
 		do {
 
 			int n = 0;
 			Integer[] temp = new Integer[que.size()];
 			que.toArray(temp);
-//			do {
-//				n = (int) (Math.random() * que.size());
-//			} while (n % 2 != 0);
-
-			map[x][y] = 1;
 			while (true) {
 				x = temp[n];
 				y = temp[n + 1];
@@ -272,6 +296,17 @@ public class GoMap extends CreatMap {
 						break;
 					}
 				}
+
+				if (keys == 1) {
+					break;
+				}
+				if (k == 0 || (x == ex && y == ey)) {
+					map[x][y] = 3;
+					que.remove(n);
+					que.remove(n);
+					break;
+				}
+
 				y = que.pollLast();
 				x = que.pollLast();
 				que.offer(x);
@@ -281,19 +316,10 @@ public class GoMap extends CreatMap {
 
 //				System.out.print(queue.toString());
 //				System.out.println();
-//				this.draw(x,y);
+//				System.out.print(que.toString());
+//				System.out.println();
+//				this.draw();
 
-				if (keys == 1) {
-					break;
-				}
-				if (k == 0 || (x == ex && y == ey)) {
-					map[x][y] = 3;
-					queue.pollLast();
-					queue.pollLast();
-					que.remove(n);
-					que.remove(n);
-					break;
-				}
 			}
 			n += 2;
 			if (keys == 1) {
@@ -651,21 +677,16 @@ public class GoMap extends CreatMap {
 
 	private void runQueueMethod(int x, int y) {// bfs相對最優解
 		LinkedList<Integer> que = new LinkedList<Integer>();
+		Stack<Integer> num = new Stack<Integer>();
 		que.offer(x);
 		que.offer(y);
 		queue.offer(x);
 		queue.offer(y);
-
+		map[x][y] = 1;
 		do {
-
 			int n = 0;
 			Integer[] temp = new Integer[que.size()];
 			que.toArray(temp);
-//			do {
-//				n = (int) (Math.random() * que.size());
-//			} while (n % 2 != 0);
-
-			map[x][y] = 1;
 			while (true) {
 				x = temp[n];
 				y = temp[n + 1];
@@ -700,6 +721,16 @@ public class GoMap extends CreatMap {
 						k = ways(0132, que, x, y, k);
 
 				}
+
+				if (keys == 1) {
+					break;
+				}
+				if (k == 0 || (x == ex && y == ey)) {
+					map[x][y] = 3;
+					que.remove(n);
+					que.remove(n);
+					break;
+				}
 				y = que.pollLast();
 				x = que.pollLast();
 				que.offer(x);
@@ -709,25 +740,55 @@ public class GoMap extends CreatMap {
 
 //				System.out.print(queue.toString());
 //				System.out.println();
-//				this.draw(x,y);
-
-				if (keys == 1) {
-					break;
-				}
-				if (k == 0 || (x == ex && y == ey)) {
-					map[x][y] = 3;
-					queue.pollLast();
-					queue.pollLast();
-					que.remove(n);
-					que.remove(n);
-					break;
-				}
+//				System.out.print(que.toString());
+//				System.out.println();
+//				this.draw();
 			}
 			n += 2;
 			if (keys == 1) {
 				break;
 			}
 		} while (!que.isEmpty());
+	}
+
+ 	private int refactor() {
+ 		int num=queue.size();
+		for (int i = 0; i < queue.size(); i++) {
+			queue2.offer((Integer) queue.get(i));
+		}
+		int nx = ex;
+		int ny = ey;
+		int sy = queue2.pollLast();
+		int sx = queue2.pollLast();
+		do {
+			if (judge(nx, ny, sx, sy)) {
+				nx = sx;
+				ny = sy;
+				queue.offer(sx);
+				queue.offer(sy);
+				map[sx][sy] = 1;
+			}
+			sy = queue2.pollLast();
+			sx = queue2.pollLast();
+//			System.out.println(queue2.toString());
+//			this.draw();
+		} while (!queue2.isEmpty());
+		map[sx][sy] = 1;
+		return num;
+	}
+
+	private boolean judge(int nx, int ny, int sx, int sy) {
+		if (nx == sx) {
+			if (ny == sy + 1 || ny == sy - 1) {
+				return true;
+			}
+		}
+		if (ny == sy) {
+			if (nx == sx + 1 || nx == sx - 1) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	void runBack() {
@@ -751,18 +812,20 @@ public class GoMap extends CreatMap {
 		runStackMethodNoY(bx, by);
 	}
 
-	void runQueueNY() {
-		queue.clear();
-		this.clear();
-		keys = 0;
-		runQueueMethodNoY(bx, by);
-	}
-
-	void runQueue() {
+	int runQueue() {
 		queue.clear();
 		this.clear();
 		keys = 0;
 		runQueueMethod(bx, by);
+		return this.refactor();
+	}
+
+	int runQueueNY() {
+		queue.clear();
+		this.clear();
+		keys = 0;
+		runQueueMethodNoY(bx, by);
+		return this.refactor();
 	}
 
 	void choice(int c, int g, int bx, int by, int ex, int ey) {

@@ -73,7 +73,7 @@ public class CreatMap {
 			System.out.println();
 		}
 		System.out.println();
-//		in.nextLine();
+		in.nextLine();
 //		in.close();
 	}
 
