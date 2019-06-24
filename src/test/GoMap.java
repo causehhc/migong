@@ -677,7 +677,6 @@ public class GoMap extends CreatMap {
 
 	private void runQueueMethod(int x, int y) {// bfsÏàŒ¦×îƒ½â
 		LinkedList<Integer> que = new LinkedList<Integer>();
-		Stack<Integer> num = new Stack<Integer>();
 		que.offer(x);
 		que.offer(y);
 		queue.offer(x);

@@ -38,7 +38,7 @@ public class Hhc extends Application {
 	int[] rdm = new int[4];
 	int winX = 1900, winY = 1000;
 	// 全文小写坐标均为倒置（历史遗留问题）
-	int x = 33, y = 23;
+	int x = 103, y = 103;
 	int xs = 25, ys = 0;
 
 	void draw(GridPane root, int xs, int ys) {
@@ -325,7 +325,6 @@ public class Hhc extends Application {
 			int num = map.runQueue();// BFS_Vctor
 			lb2.setText("计算量: " + map.count2());
 			Object[] aimArray3 = map.queue.toArray().clone();
-			System.out.println(num + " " + map.queue.size());
 			this.animo(root3, -y * f * f, xs, aimArray3, 1, num);
 		});
 
