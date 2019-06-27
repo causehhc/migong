@@ -22,26 +22,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 
 //extends Application
-public class Hhc extends Application {
-	public static void main(String[] args) {
-		launch(args);
-//		GoMap obj=new GoMap();
-//		int x=17,y=37;
-//		obj.setMap(x, y);
-//		obj.choice(1, 4, 2, 2, x-3, y-3);
-//		obj.print();
-	}
-
+public class Main {
 	GoMap map = new GoMap();
 	Timeline action;
-	int k = 0, f = 2;// TimeLine下标，放大倍率
-	int[] rdm = new int[4];
-	int winX = 1900, winY = 1000;
-	// 全文小写坐标均为倒置（历史遗留问题）
-	int x = 103, y = 103;
-	int xs = 25, ys = 0;
-
-	void draw(GridPane root, int xs, int ys) {
+	int k = 0, f = 2;// TimeLine下标，默认放大倍率为2
+	int winX = 1900, winY = 1000;// stage大小
+	int x = 103, y = 103;// 迷宫大小
+	int xs = 25, ys = 0;// 迷宫偏移量
+/*
+	void draw(GridPane root, int xs, int ys) {// 展示Pane
 		try {
 			for (int i = 0; i < x * f; i += f) {
 				for (int j = 0; j < y * f; j += f) {
@@ -63,11 +52,11 @@ public class Hhc extends Application {
 		}
 	}
 
-	void remove(GridPane root) {
+	void remove(GridPane root) {// 清空节点
 		root.getChildren().clear();
 	}
 
-	void animo(GridPane root, int xs, int ys, Object[] aimArray, int key, int num) {
+	void animo(GridPane root, int xs, int ys, Object[] aimArray, int key, int num) {// 时间轴动画
 		action = new Timeline(new KeyFrame(Duration.millis(1), e1 -> {
 			if (k >= aimArray.length) {
 				// TODO
@@ -82,24 +71,24 @@ public class Hhc extends Application {
 			r.setWidth(f * f);
 			r.setHeight(f * f);
 			if (k < 3) {
-				r.setFill(Color.RED);
+				r.setFill(Color.RED);// 起点为红色
 
 			} else if (k > aimArray.length - 1) {
-				r.setFill(Color.RED);
+				r.setFill(Color.RED);// 终点为红色
 			} else if (map.trans()[y1 / (f * f)][x1 / (f * f)] == 1) {
 				if (k == 0) {
-					r.setFill(Color.CHARTREUSE);
+					r.setFill(Color.CHARTREUSE);// 路径为绿色
 				} else {
-					if (k < num+2) {
-						r.setFill(Color.DARKGRAY);
-					} else if (k == num+2) {
-						r.setFill(Color.RED);
+					if (k < num + 2) {
+						r.setFill(Color.DARKGRAY);// 广度开始遍历时为灰色
+					} else if (k == num + 2) {
+						r.setFill(Color.RED);// 广度遍历结束为红色
 					} else {
-						r.setFill(Color.CHARTREUSE);
+						r.setFill(Color.CHARTREUSE);// 广度反向寻路为绿色
 					}
 				}
 			} else {
-				r.setFill(Color.DARKGRAY);
+				r.setFill(Color.DARKGRAY);// 深度无效路径为灰色
 			}
 			root.getChildren().add(r);
 
@@ -111,6 +100,7 @@ public class Hhc extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 
+		// 定义按钮
 		BorderPane root0 = new BorderPane();
 		GridPane root1 = new GridPane();
 		GridPane root2 = new GridPane();
@@ -122,16 +112,17 @@ public class Hhc extends Application {
 		ChoiceBox<String> cb1 = new ChoiceBox<String>(
 				FXCollections.observableArrayList("DFS_Stack", "DFS_Recall", "BFS_Strong", "BFS_Week", "Null"));
 		Button btn1 = new Button("FRESH");
-		Button btn2 = new Button("DFS-Vector");// 优化版
-		Button btn3 = new Button("DFS-Random");// 未优化版
-		Button btn8 = new Button("BFS-Vector");// 优化版
-		Button btn11 = new Button("BFS-Random");// 未优化版
+		Button btn2 = new Button("DFS-Vector");// dfs优化版
+		Button btn3 = new Button("DFS-Random");// dfs未优化版
+		Button btn8 = new Button("BFS-Vector");// bfs优化版
+		Button btn11 = new Button("BFS-Random");// bfs未优化版
 		Label lb1 = new Label("计算量: ");
 		Label lb2 = new Label("计算量: ");
 		CheckBox checkBox = new CheckBox("Random");
 		Button btn9 = new Button("+");
 		Button btn10 = new Button("-");
 
+		// 设置按钮位置并加入节点
 		root0.setTop(root1);
 		root0.setLeft(root2);
 		root0.setRight(root3);
@@ -168,12 +159,14 @@ public class Hhc extends Application {
 		root1.getChildren().add(btn10);
 		root1.getChildren().add(btn11);
 
+		// 初始化地图
 		Scene scene = new Scene(root0, winX, winY, Color.WHITE);
 		map.setMap(x, y);
 		map.setPoint(2, 2, x - 3, y - 3);
 		this.draw(root2, ys, xs);
 		this.draw(root3, -y * f * f, xs);
 
+		// 按钮事件
 		btn4.setOnAction(e -> {
 			this.remove(root2);
 			this.remove(root3);
@@ -247,17 +240,12 @@ public class Hhc extends Application {
 						break;
 					}
 					case 1: {
-						try {
-							map.setMap(x, y);
-							this.remove(root2);
-							this.remove(root3);
-							map.recur();
-							this.draw(root2, ys, xs);
-							this.draw(root3, -y * f * f, xs);
-						} catch (StackOverflowError e) {
-							new AlertBox().display("Waring", "StackOverflow!");
-							break;
-						}
+						map.setMap(x, y);
+						this.remove(root2);
+						this.remove(root3);
+						map.recur();
+						this.draw(root2, ys, xs);
+						this.draw(root3, -y * f * f, xs);
 						break;
 					}
 					case 2: {
@@ -301,7 +289,7 @@ public class Hhc extends Application {
 			k = 0;
 			map.clear();
 			map.runStack();// DFS_Vector
-			lb1.setText("计算量: " + map.count());
+			lb1.setText("计算量: " + map.count1());
 			Object[] aimArray1 = map.queue.toArray().clone();
 			this.animo(root2, 0, xs, aimArray1, 0, 0);
 		});
@@ -312,7 +300,7 @@ public class Hhc extends Application {
 			k = 0;
 			map.clear();
 			map.runStackNY();// DFS_Random
-			lb1.setText("计算量: " + map.count());
+			lb1.setText("计算量: " + map.count1());
 			Object[] aimArray2 = map.queue.toArray().clone();
 			this.animo(root2, 0, xs, aimArray2, 0, 0);
 		});
@@ -333,7 +321,6 @@ public class Hhc extends Application {
 			this.draw(root3, -y * f * f, xs);
 			k = 0;
 			map.clear();
-//			map.runBack();// DFS_Recall
 			int num = map.runQueueNY();// BFS_Random
 			lb2.setText("计算量: " + map.count2());
 			Object[] aimArray4 = map.queue.toArray().clone();
@@ -344,6 +331,7 @@ public class Hhc extends Application {
 		checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) {
 				if (checkBox.isSelected()) {
+					int[] rdm = new int[4];
 					rdm[0] = (int) (Math.random() * (x - 5) + 2);
 					rdm[2] = (int) (Math.random() * (x - 5) + 2);
 					rdm[1] = (int) (Math.random() * (y - 5) + 2);
@@ -357,8 +345,17 @@ public class Hhc extends Application {
 			}
 		});
 
+		// showstage
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-
+*/
+	public static void main(String[] args) {
+//		launch(args);
+		GoMap obj=new GoMap();
+		int x=17,y=67;
+		obj.setMap(x, y);
+		obj.choice(1, 1, 2, 2, x-3, y-3);
+		obj.print();
+	}
 }

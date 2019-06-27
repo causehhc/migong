@@ -5,21 +5,20 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class CreatMap {
-	private int x = -1;
-	private int y = -1;
-	protected int[][] map;
+	private int x = -1, y = -1;// 初始化迷宫大小
+	int[][] map;
 
 	CreatMap() {
 
 	}
 
-	int[][] trans() {
+	int[][] trans() {// 传回map数据
 		return map;
 	}
 
-	void setMap(int x, int y) {
+	void setMap(int x, int y) {// 初始化地图
 		map = new int[x][y];
-		while (true) {
+		while (true) {// 生成起点必须为奇数
 			this.x = (int) (Math.random() * (x - 4)) + 2;
 			this.y = (int) (Math.random() * (y - 4)) + 2;
 			if (this.x % 2 == 0 && this.y % 2 == 0) {
@@ -33,7 +32,7 @@ public class CreatMap {
 		}
 	}
 
-	void clear() {
+	void clear() {// 清空路径
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
 				if (map[i][j] == 1 || map[i][j] == 3) {
@@ -43,7 +42,7 @@ public class CreatMap {
 		}
 	}
 
-	void print() {
+	void print() {// 控制台带颜色打印
 		Scanner in = new Scanner(System.in);
 		for (int i = 0; i < map.length - 1; i++) {
 			System.out.printf("%2d", i);
@@ -73,11 +72,11 @@ public class CreatMap {
 			System.out.println();
 		}
 		System.out.println();
-		in.nextLine();
-		in.close();
+//		in.nextLine();
+//		in.close();
 	}
 
-	void draw(int x, int y) {
+	void draw(int x, int y) {// 展示地图（带扫描位置）
 		Scanner in = new Scanner(System.in);
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[i].length; j++) {
@@ -93,10 +92,10 @@ public class CreatMap {
 			System.out.println();
 		}
 		in.nextLine();
-		in.close();
+//		in.close();
 	}
 
-	void draw() {
+	void draw() {// 展示地图
 		Scanner in = new Scanner(System.in);
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[i].length; j++) {
@@ -105,10 +104,10 @@ public class CreatMap {
 			System.out.println();
 		}
 		in.nextLine();
-		in.close();
+//		in.close();
 	}
 
-	private boolean judge(int x, int y) {
+	private boolean judge(int x, int y) {// 判断生成条件
 		if (map[x][y + 2] + map[x][y + 1] == 1 || map[x - 2][y] + map[x - 1][y] == 1
 				|| map[x][y - 2] + map[x][y - 1] == 1 || map[x + 2][y] + map[x + 1][y] == 1) {
 			return true;
@@ -116,7 +115,7 @@ public class CreatMap {
 		return false;
 	}
 
-	private boolean recursion(int x, int y) {
+	private boolean recursion(int x, int y) {// 回溯法
 //		System.out.println("push in:"+x+"+"+y);
 //		this.draw();
 		while (judge(x, y)) {
@@ -156,11 +155,11 @@ public class CreatMap {
 		return false;
 	}
 
-	void recur() {
+	void recur() {// 方法调用
 		recursion(x, y);
 	}
 
-	void stack() {
+	void stack() {// 深度优先-栈
 		Stack<Integer> st = new Stack<Integer>();
 		st.push(y);
 		st.push(x);
@@ -226,12 +225,11 @@ public class CreatMap {
 		} while (!st.empty());
 	}
 
-	void queue(int c) {// c0简单c1难
+	void queue(int c) {// 广度优先-队列 （c0简单c1难）
 		LinkedList<Integer> que = new LinkedList<Integer>();
 		que.offer(x);
 		que.offer(y);
 		do {
-			// 关键1:无此则走不远
 			int n = 0;
 			Integer[] temp = new Integer[que.size()];
 			que.toArray(temp);
