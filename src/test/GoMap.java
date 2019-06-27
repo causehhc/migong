@@ -12,6 +12,9 @@ public class GoMap extends CreatMap {
 	LinkedList<Integer> queue;// 通用队列
 	private LinkedList<Integer> queue2;// 广度寻路队列
 	private LinkedList<int[][]> queue3;// 路径数组记录
+	private int[][] copyMap;
+	private int[][] copyMapBest;
+	private int[][] copyMapBad;
 
 	GoMap() {
 		queue = new LinkedList<Integer>();
@@ -27,7 +30,7 @@ public class GoMap extends CreatMap {
 		map[bx][by] = map[ex][ey] = 8;
 	}
 
-	int count() {// 计算1
+	private static int count(int[][] map) {// 计算1
 		int n1 = 0;
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
@@ -37,6 +40,35 @@ public class GoMap extends CreatMap {
 			}
 		}
 		return n1;
+	}
+
+	private void best(LinkedList<int[][]> queue, int x, int y) {//返回最短路径地图
+		copyMapBest = new int[x][y];
+		copyMapBad= new int[x][y];
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[i].length; j++) {
+				copyMapBest[i][j] = 1;
+			}
+		}
+		int size = queue.size();
+		for (int i = 0; i < size; i++) {
+			if (count(queue.get(i)) < count(copyMapBest)) {
+				copyMapBest = queue.get(i).clone();
+			}
+			if (count(queue.get(i)) > count(copyMapBad)) {
+				copyMapBad = queue.get(i).clone();
+			}
+		}
+	}
+
+	int[][] copy() {//记录路径地图
+		copyMap = new int[map.length][map[0].length];
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[0].length; j++) {
+				copyMap[i][j] = map[i][j];
+			}
+		}
+		return copyMap;
 	}
 
 	int count1() {// 深度优先效率计算
@@ -69,16 +101,20 @@ public class GoMap extends CreatMap {
 		return (n3 + n1 * 2);
 	}
 
-	private boolean runBackMethod(int x, int y) {// 生成多条路径专用，回溯法
+	private boolean runBackMethod(int x, int y) {// 生成多条路径专用，回溯法，多路径演示
 //		if (keys == 1) {
 //			return false;
 //		}
 		if (x == ex && y == ey) {
-//			keys = 1;
 			map[x][y] = 1;
-			System.out.println("下图路径数:" + this.count());
-			this.print();
-			queue3.offer(map);
+			queue3.offer(this.copy());//queue3++
+//			keys = 1;
+			/*
+			 * 解释
+			 */
+			
+//			System.out.println("下图路径数:" + count(map));
+//			this.print();
 		}
 		if (map[x][y] == 8) {
 			map[x][y] = 1;
@@ -124,7 +160,7 @@ public class GoMap extends CreatMap {
 					map[x][y] = 1;
 					if (x == ex && y == ey) {
 						k = 1;
-//						System.out.println("下图路径数:"+this.count());
+//						System.out.println("下图路径数:"+count(map));
 //						this.print();
 						keys = 1;
 						break;
@@ -141,7 +177,7 @@ public class GoMap extends CreatMap {
 					map[x][y] = 1;
 					if (x == ex && y == ey) {
 						k = 1;
-//						System.out.println("下图路径数:"+this.count());
+//						System.out.println("下图路径数:"+count(map));
 //						this.print();
 						keys = 1;
 						break;
@@ -158,7 +194,7 @@ public class GoMap extends CreatMap {
 					map[x][y] = 1;
 					if (x == ex && y == ey) {
 						k = 1;
-//						System.out.println("下图路径数:"+this.count());
+//						System.out.println("下图路径数:"+count(map));
 //						this.print();
 						keys = 1;
 						break;
@@ -175,7 +211,7 @@ public class GoMap extends CreatMap {
 					map[x][y] = 1;
 					if (x == ex && y == ey) {
 						k = 1;
-//						System.out.println("下图路径数:"+this.count());
+//						System.out.println("下图路径数:"+count(map));
 //						this.print();
 						keys = 1;
 						break;
@@ -237,7 +273,7 @@ public class GoMap extends CreatMap {
 					map[x][y] = 1;
 					if (x == ex && y == ey) {
 						k = 1;
-//						System.out.println("下图路径数:" + this.count());
+//						System.out.println("下图路径数:" +count(map));
 //						this.print();
 						keys = 1;
 						break;
@@ -254,7 +290,7 @@ public class GoMap extends CreatMap {
 					map[x][y] = 1;
 					if (x == ex && y == ey) {
 						k = 1;
-//						System.out.println("下图路径数:" + this.count());
+//						System.out.println("下图路径数:" +count(map));
 //						this.print();
 						keys = 1;
 						break;
@@ -271,7 +307,7 @@ public class GoMap extends CreatMap {
 					map[x][y] = 1;
 					if (x == ex && y == ey) {
 						k = 1;
-//						System.out.println("下图路径数:" + this.count());
+//						System.out.println("下图路径数:" + count(map));
 //						this.print();
 						keys = 1;
 						break;
@@ -288,7 +324,7 @@ public class GoMap extends CreatMap {
 					map[x][y] = 1;
 					if (x == ex && y == ey) {
 						k = 1;
-//						System.out.println("下图路径数:" + this.count());
+//						System.out.println("下图路径数:" + count(map));
 //						this.print();
 						keys = 1;
 						break;
@@ -328,7 +364,6 @@ public class GoMap extends CreatMap {
 
 	private int way0(Stack<Integer> st, int x, int y, int k) {// 深度子策略组
 		while (map[x][y + 1] == 8 && k == 0) {
-
 			k = 1;
 			st.push(y + 1);
 			st.push(x);
@@ -338,9 +373,8 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = 1;
 				keys = 1;
-//				System.out.println("下图路径数:"+this.count());
+//				System.out.println("下图路径数:"+count(map));
 //				this.print();
 				break;
 			}
@@ -359,9 +393,8 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = 1;
 				keys = 1;
-//				System.out.println("下图路径数:"+this.count());
+//				System.out.println("下图路径数:"+this.count(map)());
 //				this.print();
 				break;
 			}
@@ -380,9 +413,8 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = 1;
 				keys = 1;
-//				System.out.println("下图路径数:"+this.count());
+//				System.out.println("下图路径数:"+count(map));
 //				this.print();
 				break;
 			}
@@ -402,9 +434,8 @@ public class GoMap extends CreatMap {
 			st.push(x);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = 1;
 				keys = 1;
-//				System.out.println("下图路径数:"+this.count());
+//				System.out.println("下图路径数:"+count(map));
 //				this.print();
 				break;
 			}
@@ -528,7 +559,7 @@ public class GoMap extends CreatMap {
 					queue.pollLast();
 					st.pop();
 					st.pop();
-					map[x][y] = 1;// 3一结果8多结果
+					map[x][y] = 3;
 					break;
 				}
 			}
@@ -549,8 +580,7 @@ public class GoMap extends CreatMap {
 			que.offer(y);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = 1;
-//				System.out.println("下图路径数:" + this.count());
+//				System.out.println("下图路径数:" + count(map));
 //				this.print();
 				keys = 1;
 				break;
@@ -570,8 +600,7 @@ public class GoMap extends CreatMap {
 			que.offer(y);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = 1;
-//				System.out.println("下图路径数:" + this.count());
+//				System.out.println("下图路径数:" + count(map));
 //				this.print();
 				keys = 1;
 				break;
@@ -591,8 +620,7 @@ public class GoMap extends CreatMap {
 			que.offer(y);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = 1;
-//				System.out.println("下图路径数:" + this.count());
+//				System.out.println("下图路径数:" + count(map));
 //				this.print();
 				keys = 1;
 				break;
@@ -612,8 +640,7 @@ public class GoMap extends CreatMap {
 			que.offer(y);
 			map[x][y] = 1;
 			if (x == ex && y == ey) {
-				k = 1;
-//				System.out.println("下图路径数:" + this.count());
+//				System.out.println("下图路径数:" + count(map));
 //				this.print();
 				keys = 1;
 				break;
@@ -789,14 +816,22 @@ public class GoMap extends CreatMap {
 		return false;
 	}
 
-	void runBack() {// 回溯法
-		queue.clear();
+	int runBack() {// 回溯法
+		queue3.clear();
 		this.clear();
-		keys = 0;
 		runBackMethod(bx, by);
-		System.out.println(queue3.size());
+		best(queue3, map.length, map[0].length);
+		return queue3.size();
 	}
-
+	
+	int[][] getMapBest(){
+		return  copyMapBest;
+	}
+	
+	int[][] getMapBad(){
+		return copyMapBad;
+	}
+	
 	void runStack() {// 深度-优化调用
 		queue.clear();
 		this.clear();

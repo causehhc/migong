@@ -22,14 +22,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 
 //extends Application
-public class Main {
+public class Main extends Application {
 	GoMap map = new GoMap();
 	Timeline action;
 	int k = 0, f = 2;// TimeLine下标，默认放大倍率为2
 	int winX = 1900, winY = 1000;// stage大小
 	int x = 103, y = 103;// 迷宫大小
 	int xs = 25, ys = 0;// 迷宫偏移量
-/*
+
 	void draw(GridPane root, int xs, int ys) {// 展示Pane
 		try {
 			for (int i = 0; i < x * f; i += f) {
@@ -48,7 +48,31 @@ public class Main {
 				}
 			}
 		} catch (NullPointerException e) {
-			System.out.println("fuck");
+			System.out.println("...");
+		}
+	}
+
+	void draw(GridPane root, int xs, int ys, int[][] map) {// 展示最优解
+		try {
+			for (int i = 0; i < x * f; i += f) {
+				for (int j = 0; j < y * f; j += f) {
+					Rectangle r = new Rectangle();
+					r.setTranslateX(j * f + xs);
+					r.setTranslateY(i * f + ys);
+					r.setWidth(f * f);
+					r.setHeight(f * f);
+					if(map[i/f][j/f]==0) {
+						r.setFill(Color.BLACK);
+					}else if(map[i/f][j/f]==1){
+						r.setFill(Color.CHARTREUSE);
+					}else {
+						r.setFill(Color.WHITE);
+					}
+					root.getChildren().add(r);
+				}
+			}
+		} catch (NullPointerException e) {
+			System.out.println("...");
 		}
 	}
 
@@ -121,6 +145,8 @@ public class Main {
 		CheckBox checkBox = new CheckBox("Random");
 		Button btn9 = new Button("+");
 		Button btn10 = new Button("-");
+		CheckBox checkBox2 = new CheckBox("best");
+		Button btn12 = new Button("run");
 
 		// 设置按钮位置并加入节点
 		root0.setTop(root1);
@@ -135,6 +161,7 @@ public class Main {
 		cb1.setTranslateX(350);
 		btn1.setTranslateX(480);
 		btn2.setTranslateX(580);
+		btn12.setTranslateX(580);
 		btn3.setTranslateX(690);
 		btn8.setTranslateX(810);
 		btn11.setTranslateX(920);
@@ -143,6 +170,7 @@ public class Main {
 		lb2.setTranslateX(1000);
 		lb2.setTranslateY(25);
 		checkBox.setTranslateX(1070);
+		checkBox2.setTranslateX(1170);
 		root1.getChildren().add(btn4);
 		root1.getChildren().add(btn5);
 		root1.getChildren().add(btn6);
@@ -158,6 +186,7 @@ public class Main {
 		root1.getChildren().add(btn9);
 		root1.getChildren().add(btn10);
 		root1.getChildren().add(btn11);
+		root1.getChildren().add(checkBox2);
 
 		// 初始化地图
 		Scene scene = new Scene(root0, winX, winY, Color.WHITE);
@@ -235,8 +264,10 @@ public class Main {
 						this.remove(root2);
 						this.remove(root3);
 						map.stack();
-						this.draw(root2, ys, xs);
-						this.draw(root3, -y * f * f, xs);
+						if (!checkBox2.isSelected()) {
+							this.draw(root2, ys, xs);
+							this.draw(root3, -y * f * f, xs);							
+						}
 						break;
 					}
 					case 1: {
@@ -244,8 +275,10 @@ public class Main {
 						this.remove(root2);
 						this.remove(root3);
 						map.recur();
-						this.draw(root2, ys, xs);
-						this.draw(root3, -y * f * f, xs);
+						if (!checkBox2.isSelected()) {
+							this.draw(root2, ys, xs);
+							this.draw(root3, -y * f * f, xs);							
+						}
 						break;
 					}
 					case 2: {
@@ -253,8 +286,10 @@ public class Main {
 						this.remove(root2);
 						this.remove(root3);
 						map.queue(1);// BFS_Strong
-						this.draw(root2, ys, xs);
-						this.draw(root3, -y * f * f, xs);
+						if (!checkBox2.isSelected()) {
+							this.draw(root2, ys, xs);
+							this.draw(root3, -y * f * f, xs);							
+						}
 						break;
 					}
 					case 3: {
@@ -262,8 +297,10 @@ public class Main {
 						this.remove(root2);
 						this.remove(root3);
 						map.queue(0);// BFS_week
-						this.draw(root2, ys, xs);
-						this.draw(root3, -y * f * f, xs);
+						if (!checkBox2.isSelected()) {
+							this.draw(root2, ys, xs);
+							this.draw(root3, -y * f * f, xs);							
+						}
 						break;
 					}
 
@@ -292,6 +329,15 @@ public class Main {
 			lb1.setText("计算量: " + map.count1());
 			Object[] aimArray1 = map.queue.toArray().clone();
 			this.animo(root2, 0, xs, aimArray1, 0, 0);
+		});
+
+		btn12.setOnAction(e -> {
+			this.remove(root2);
+			this.remove(root3);
+			map.clear();
+			lb1.setText("有效路径个数: " + map.runBack());
+			this.draw(root2, ys, xs, map.getMapBest());// best
+			this.draw(root3, -y * f * f, xs, map.getMapBad());// bad
 		});
 
 		btn3.setOnAction(e -> {
@@ -345,17 +391,46 @@ public class Main {
 			}
 		});
 
+		checkBox2.selectedProperty().addListener(new ChangeListener<Boolean>() {
+			public void changed(ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) {
+				if (checkBox2.isSelected()) {
+		
+					root1.getChildren().remove(checkBox);
+					root1.getChildren().remove(btn1);
+					root1.getChildren().remove(btn2);
+					root1.getChildren().add(btn12);
+					root1.getChildren().remove(btn3);
+					root1.getChildren().remove(btn8);
+					root1.getChildren().remove(btn11);
+					lb1.setText("有效路径个数: ");
+					lb2.setText("当前路径距离: ");
+					root1.getChildren().remove(lb2);
+				} else {
+			
+					root1.getChildren().add(checkBox);
+					root1.getChildren().add(btn1);
+					root1.getChildren().remove(btn12);
+					root1.getChildren().add(btn2);
+					root1.getChildren().add(btn3);
+					root1.getChildren().add(btn8);
+					root1.getChildren().add(btn11);
+					lb1.setText("计算量: ");
+					lb2.setText("计算量: ");
+					root1.getChildren().add(lb2);
+				}
+			}
+		});
+
 		// showstage
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-*/
+
 	public static void main(String[] args) {
-//		launch(args);
-		GoMap obj=new GoMap();
-		int x=17,y=67;
-		obj.setMap(x, y);
-		obj.choice(1, 1, 2, 2, x-3, y-3);
-		obj.print();
+		launch(args);
+//		GoMap obj=new GoMap();
+//		int x=17,y=67;
+//		obj.setMap(x, y);
+//		obj.choice(1, 5, 2, 2, x-3, y-3);//多路径演示
 	}
 }

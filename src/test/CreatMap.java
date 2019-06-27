@@ -5,7 +5,8 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class CreatMap {
-	private int x = -1, y = -1;// 初始化迷宫大小
+	protected int x = -1;// 初始化迷宫大小
+	protected int y = -1;
 	int[][] map;
 
 	CreatMap() {
@@ -75,6 +76,64 @@ public class CreatMap {
 //		in.nextLine();
 //		in.close();
 	}
+	
+	static void print(int[][] map) {// 控制台带颜色打印
+		Scanner in = new Scanner(System.in);
+		for (int i = 0; i < map.length - 1; i++) {
+			System.out.printf("%2d", i);
+			for (int j = 1; j < map[i].length - 1; j++) {
+				if (i == 0) {
+					if (j > 9) {
+						if (j % 10 == 0) {
+							System.out.print("\u001b[1;31m0\u001b[0m");
+						} else {
+							System.out.print(j % 10);
+						}
+					} else {
+						System.out.print(j);
+					}
+				} else {
+					if (map[i][j] == 0) {
+						System.out.print("\u001b[40m0\u001b[0m");
+					} else if (map[i][j] == 8) {
+						System.out.print("\u001b[37m8\u001b[0m");
+					} else if (map[i][j] == 3) {
+						System.out.print("\u001b[31m3\u001b[0m");
+					} else {
+						System.out.print("\u001b[1;31m1\u001b[0m");
+					}
+				}
+			}
+			System.out.println();
+		}
+		System.out.println();
+//		in.nextLine();
+//		in.close();
+	}	
+
+	void draw() {// 展示地图
+		Scanner in = new Scanner(System.in);
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[i].length; j++) {
+				System.out.print(map[i][j]);
+			}
+			System.out.println();
+		}
+		in.nextLine();
+//		in.close();
+	}
+	
+	static void draw(int[][] map) {// 展示地图
+		Scanner in = new Scanner(System.in);
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[i].length; j++) {
+				System.out.print(map[i][j]);
+			}
+			System.out.println();
+		}
+		in.nextLine();
+//		in.close();
+	}
 
 	void draw(int x, int y) {// 展示地图（带扫描位置）
 		Scanner in = new Scanner(System.in);
@@ -94,19 +153,7 @@ public class CreatMap {
 		in.nextLine();
 //		in.close();
 	}
-
-	void draw() {// 展示地图
-		Scanner in = new Scanner(System.in);
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[i].length; j++) {
-				System.out.print(map[i][j]);
-			}
-			System.out.println();
-		}
-		in.nextLine();
-//		in.close();
-	}
-
+	
 	private boolean judge(int x, int y) {// 判断生成条件
 		if (map[x][y + 2] + map[x][y + 1] == 1 || map[x - 2][y] + map[x - 1][y] == 1
 				|| map[x][y - 2] + map[x][y - 1] == 1 || map[x + 2][y] + map[x + 1][y] == 1) {
