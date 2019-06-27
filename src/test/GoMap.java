@@ -830,7 +830,13 @@ public class GoMap extends CreatMap {
 	int runBack() {// 回溯法-计算最优路径
 		queue3.clear();
 		this.clear();
-		runBackMethod(bx, by);
+		try {
+			runBackMethod(bx, by);
+		}
+		catch(StackOverflowError e) {
+			System.out.println("StackOverflowError!");
+			return -1;
+		}
 		best(queue3, map.length, map[0].length);
 		return queue3.size();
 	}
