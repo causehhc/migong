@@ -23,6 +23,7 @@ import javafx.collections.FXCollections;
 
 //extends Application
 public class Main extends Application {
+	
 	GoMap map = new GoMap();
 	Timeline action;
 	int k = 0, f = 2;// TimeLine下标，默认放大倍率为2
@@ -61,11 +62,11 @@ public class Main extends Application {
 					r.setTranslateY(i * f + ys);
 					r.setWidth(f * f);
 					r.setHeight(f * f);
-					if(map[i/f][j/f]==0) {
+					if (map[i / f][j / f] == 0) {
 						r.setFill(Color.BLACK);
-					}else if(map[i/f][j/f]==1){
+					} else if (map[i / f][j / f] == 1) {
 						r.setFill(Color.CHARTREUSE);
-					}else {
+					} else {
 						r.setFill(Color.WHITE);
 					}
 					root.getChildren().add(r);
@@ -266,7 +267,7 @@ public class Main extends Application {
 						map.stack();
 						if (!checkBox2.isSelected()) {
 							this.draw(root2, ys, xs);
-							this.draw(root3, -y * f * f, xs);							
+							this.draw(root3, -y * f * f, xs);
 						}
 						break;
 					}
@@ -277,7 +278,7 @@ public class Main extends Application {
 						map.recur();
 						if (!checkBox2.isSelected()) {
 							this.draw(root2, ys, xs);
-							this.draw(root3, -y * f * f, xs);							
+							this.draw(root3, -y * f * f, xs);
 						}
 						break;
 					}
@@ -288,7 +289,7 @@ public class Main extends Application {
 						map.queue(1);// BFS_Strong
 						if (!checkBox2.isSelected()) {
 							this.draw(root2, ys, xs);
-							this.draw(root3, -y * f * f, xs);							
+							this.draw(root3, -y * f * f, xs);
 						}
 						break;
 					}
@@ -299,7 +300,7 @@ public class Main extends Application {
 						map.queue(0);// BFS_week
 						if (!checkBox2.isSelected()) {
 							this.draw(root2, ys, xs);
-							this.draw(root3, -y * f * f, xs);							
+							this.draw(root3, -y * f * f, xs);
 						}
 						break;
 					}
@@ -394,8 +395,6 @@ public class Main extends Application {
 		checkBox2.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) {
 				if (checkBox2.isSelected()) {
-		
-					root1.getChildren().remove(checkBox);
 					root1.getChildren().remove(btn1);
 					root1.getChildren().remove(btn2);
 					root1.getChildren().add(btn12);
@@ -406,8 +405,6 @@ public class Main extends Application {
 					lb2.setText("当前路径距离: ");
 					root1.getChildren().remove(lb2);
 				} else {
-			
-					root1.getChildren().add(checkBox);
 					root1.getChildren().add(btn1);
 					root1.getChildren().remove(btn12);
 					root1.getChildren().add(btn2);

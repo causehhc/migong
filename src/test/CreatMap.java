@@ -76,7 +76,7 @@ public class CreatMap {
 //		in.nextLine();
 //		in.close();
 	}
-	
+
 	static void print(int[][] map) {// 控制台带颜色打印
 		Scanner in = new Scanner(System.in);
 		for (int i = 0; i < map.length - 1; i++) {
@@ -109,7 +109,7 @@ public class CreatMap {
 		System.out.println();
 //		in.nextLine();
 //		in.close();
-	}	
+	}
 
 	void draw() {// 展示地图
 		Scanner in = new Scanner(System.in);
@@ -122,7 +122,7 @@ public class CreatMap {
 		in.nextLine();
 //		in.close();
 	}
-	
+
 	static void draw(int[][] map) {// 展示地图
 		Scanner in = new Scanner(System.in);
 		for (int i = 0; i < map.length; i++) {
@@ -153,7 +153,7 @@ public class CreatMap {
 		in.nextLine();
 //		in.close();
 	}
-	
+
 	private boolean judge(int x, int y) {// 判断生成条件
 		if (map[x][y + 2] + map[x][y + 1] == 1 || map[x - 2][y] + map[x - 1][y] == 1
 				|| map[x][y - 2] + map[x][y - 1] == 1 || map[x + 2][y] + map[x + 1][y] == 1) {

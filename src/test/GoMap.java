@@ -9,17 +9,28 @@ public class GoMap extends CreatMap {
 	private int ex = -1;// 初始化出点x坐标
 	private int ey = -1;// 初始化出点y坐标
 	private int keys = 0;// 生成结果判断标记
+
 	LinkedList<Integer> queue;// 通用队列
+
 	private LinkedList<Integer> queue2;// 广度寻路队列
-	private LinkedList<int[][]> queue3;// 路径数组记录
-	private int[][] copyMap;
-	private int[][] copyMapBest;
-	private int[][] copyMapBad;
+
+	private LinkedList<int[][]> queue3;// 路径数组记录表
+	private int[][] copyMap;// 实例化路径数组
+	private int[][] copyMapBest;// 最优路径
+	private int[][] copyMapBad;// 最坏路径
 
 	GoMap() {
 		queue = new LinkedList<Integer>();
 		queue2 = new LinkedList<Integer>();
 		queue3 = new LinkedList<int[][]>();
+	}
+
+	int[][] getMapBest() {
+		return copyMapBest;
+	}
+
+	int[][] getMapBad() {
+		return copyMapBad;
 	}
 
 	void setPoint(int bx, int by, int ex, int ey) {// 设置入点和出点
@@ -28,47 +39,6 @@ public class GoMap extends CreatMap {
 		this.ex = ex;
 		this.ey = ey;
 		map[bx][by] = map[ex][ey] = 8;
-	}
-
-	private static int count(int[][] map) {// 计算1
-		int n1 = 0;
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[0].length; j++) {
-				if (map[i][j] == 1) {
-					n1++;
-				}
-			}
-		}
-		return n1;
-	}
-
-	private void best(LinkedList<int[][]> queue, int x, int y) {//返回最短路径地图
-		copyMapBest = new int[x][y];
-		copyMapBad= new int[x][y];
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[i].length; j++) {
-				copyMapBest[i][j] = 1;
-			}
-		}
-		int size = queue.size();
-		for (int i = 0; i < size; i++) {
-			if (count(queue.get(i)) < count(copyMapBest)) {
-				copyMapBest = queue.get(i).clone();
-			}
-			if (count(queue.get(i)) > count(copyMapBad)) {
-				copyMapBad = queue.get(i).clone();
-			}
-		}
-	}
-
-	int[][] copy() {//记录路径地图
-		copyMap = new int[map.length][map[0].length];
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map[0].length; j++) {
-				copyMap[i][j] = map[i][j];
-			}
-		}
-		return copyMap;
 	}
 
 	int count1() {// 深度优先效率计算
@@ -101,18 +71,59 @@ public class GoMap extends CreatMap {
 		return (n3 + n1 * 2);
 	}
 
+	private static int count(int[][] map) {// 计算路程
+		int n1 = 0;
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[0].length; j++) {
+				if (map[i][j] == 1) {
+					n1++;
+				}
+			}
+		}
+		return n1;
+	}
+
+	private void best(LinkedList<int[][]> queue, int x, int y) {// 计算路径表
+		copyMapBest = new int[x][y];
+		copyMapBad = new int[x][y];
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[i].length; j++) {
+				copyMapBest[i][j] = 1;
+			}
+		}
+		int size = queue.size();
+		for (int i = 0; i < size; i++) {
+			if (count(queue.get(i)) < count(copyMapBest)) {
+				copyMapBest = queue.get(i).clone();
+			}
+			if (count(queue.get(i)) > count(copyMapBad)) {
+				copyMapBad = queue.get(i).clone();
+			}
+		}
+	}
+
+	private int[][] copy() {// 记录路径地图
+		copyMap = new int[map.length][map[0].length];
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[0].length; j++) {
+				copyMap[i][j] = map[i][j];
+			}
+		}
+		return copyMap;
+	}
+
 	private boolean runBackMethod(int x, int y) {// 生成多条路径专用，回溯法，多路径演示
 //		if (keys == 1) {
 //			return false;
 //		}
 		if (x == ex && y == ey) {
 			map[x][y] = 1;
-			queue3.offer(this.copy());//queue3++
+			queue3.offer(this.copy());// queue3++
 //			keys = 1;
 			/*
 			 * 解释
 			 */
-			
+
 //			System.out.println("下图路径数:" + count(map));
 //			this.print();
 		}
@@ -816,22 +827,14 @@ public class GoMap extends CreatMap {
 		return false;
 	}
 
-	int runBack() {// 回溯法
+	int runBack() {// 回溯法-计算最优路径
 		queue3.clear();
 		this.clear();
 		runBackMethod(bx, by);
 		best(queue3, map.length, map[0].length);
 		return queue3.size();
 	}
-	
-	int[][] getMapBest(){
-		return  copyMapBest;
-	}
-	
-	int[][] getMapBad(){
-		return copyMapBad;
-	}
-	
+
 	void runStack() {// 深度-优化调用
 		queue.clear();
 		this.clear();
