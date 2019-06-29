@@ -123,14 +123,11 @@ public class GoMap extends CreatMap {
 			/*
 			 * 解释
 			 */
-
 //			System.out.println("下图路径数:" + count(map));
 //			this.print();
 		}
 		if (map[x][y] == 8) {
 			map[x][y] = 1;
-			queue.offer(x);
-			queue.offer(y);
 			if (runBackMethod(x, y + 1)) {
 				if (runBackMethod(x - 1, y)) {
 					if (runBackMethod(x, y - 1)) {

@@ -74,7 +74,7 @@ public class CreatMap {
 		}
 		System.out.println();
 //		in.nextLine();
-//		in.close();
+		in.close();
 	}
 
 	static void print(int[][] map) {// 控制台带颜色打印
@@ -108,7 +108,7 @@ public class CreatMap {
 		}
 		System.out.println();
 //		in.nextLine();
-//		in.close();
+		in.close();
 	}
 
 	void draw() {// 展示地图
@@ -120,7 +120,7 @@ public class CreatMap {
 			System.out.println();
 		}
 		in.nextLine();
-//		in.close();
+		in.close();
 	}
 
 	static void draw(int[][] map) {// 展示地图
@@ -132,7 +132,7 @@ public class CreatMap {
 			System.out.println();
 		}
 		in.nextLine();
-//		in.close();
+		in.close();
 	}
 
 	void draw(int x, int y) {// 展示地图（带扫描位置）
@@ -151,7 +151,7 @@ public class CreatMap {
 			System.out.println();
 		}
 		in.nextLine();
-//		in.close();
+		in.close();
 	}
 
 	private boolean judge(int x, int y) {// 判断生成条件
